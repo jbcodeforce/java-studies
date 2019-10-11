@@ -52,6 +52,7 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
         // by delegating the call to Bestsellers Service
     }
     ```
+
 * **Health Check** lets developers define and expose a domain-specific microservices health status (“UP” or “DOWN”) so unhealthy services can be restarted by the underlying environment. Health checks are used to determine
 both the liveness and readiness of a service. Determining the state of a service can be composed by a set
 of verification procedures. Multiple domain-specific health checks can easily be added to a microservice
@@ -94,7 +95,7 @@ by implementing the corresponding HealthCheck interface.
 
 * **Open API** specification provides a set of Java interfaces and programming models that allow developers to natively produce OpenAPI v3 documents. Use JAX-RS anotations with OpenAPI annotations or start from a yml file.
 
-* ** Rest Client** simplifies building REST Clients by providing a type-safe approach for invoking RESTful services over HTTP. It uses JXRS 2.1.
+* **Rest Client** simplifies building REST Clients by providing a type-safe approach for invoking RESTful services over HTTP. It uses JXRS 2.1.
 
 * **JWT Authentication** defines a format of JSON Web Token (JWT) used as the basis for interoperable authentication and authorization by providing role-based access control (RBAC) microservice endpoints using OpenID Connect. One of the main strategies to propagate the security state from clients to services, or even from services to services, involves the use of security tokens. 
 
@@ -113,9 +114,9 @@ JDK8 compatible Reactive Streams API - that was lighter weight and easier to use
 [MicroProfile Starter](https://start.microprofile.io/) helps to generate microprofile maven project with sample code. 
 The folders microprofile30/service-a and service-b have the generated code. From this code the app under JEEPlay jbcodeforce.microprofile.app defines a basic template for a REST based microservice. What need to be done is:
 
-* JAX-RS has two key concepts for creating REST APIs. The resource itself, which is modelled as a class, and a JAX-RS application, which groups all exposed resources under a common path. See the class [BasicRestApp](). 
+* JAX-RS has two key concepts for creating REST APIs. The resource itself, which is modelled as a class, and a JAX-RS application, which groups all exposed resources under a common path. See the class [BasicRestApp](https://github.com/jbcodeforce/java-studies/blob/master/JEEPlay/src/main/java/jbcodeforce/microprofile/app/BasicRestApp.java). 
 * The @ApplicationPath annotation has a value that indicates the path within the WAR that the JAX-RS application accepts requests from.
-* Clear have one Resource class for the same resource type. The @Path annotation on the class indicates that this resource responds to specified path of the JAX-rS application. JAX-RS maps the HTTP methods on the URL to the methods on the class. [SystemPropertiesResource](SystemPropertiesResource.java)
+* Clear have one Resource class for the same resource type. The @Path annotation on the class indicates that this resource responds to specified path of the JAX-rS application. JAX-RS maps the HTTP methods on the URL to the methods on the class. [SystemPropertiesResource](https://github.com/jbcodeforce/java-studies/blob/master/JEEPlay/src/main/java/jbcodeforce/microprofile/app/SystemPropertiesResource.java)
 * The JAX-RS 2.1 specification mandates JSON-Binding (JSON-B) and JAX-B.
 
 http://localhost:9080/JEEPlay/System/properties

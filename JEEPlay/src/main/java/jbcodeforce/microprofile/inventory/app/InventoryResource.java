@@ -1,4 +1,4 @@
-package jbcodeforce.microprofile.app;
+package jbcodeforce.microprofile.inventory.app;
 
 import java.util.Properties;
 
@@ -11,8 +11,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import jbcodeforce.microprofile.domain.InventoryList;
-import jbcodeforce.microprofile.domain.InventoryManager;
+import jbcodeforce.microprofile.inventory.domain.InventoryList;
+import jbcodeforce.microprofile.inventory.domain.InventoryManager;
+import jbcodeforce.microprofile.inventory.infrastructure.SystemClient;
 
 /**
  * 

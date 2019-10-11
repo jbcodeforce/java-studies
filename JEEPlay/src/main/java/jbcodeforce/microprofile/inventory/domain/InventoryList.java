@@ -1,4 +1,4 @@
-package jbcodeforce.microprofile.domain;
+package jbcodeforce.microprofile.inventory.domain;
 
 import java.util.List;
 

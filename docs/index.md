@@ -118,7 +118,7 @@ Use the Open Liberty guide from [here](https://openliberty.io/guides/maven-intro
 	mvn liberty:start-server
 	```
 
-See above steps materialized in code in JEEPlay/... [HelloServlet.java](https://github.com/jbcodeforce/java-studies/tree/master/JEEPlay/src/main/java/jbcodeforce/servlet/HelloServlet.java) and [ServletEndPointIT.java](https://github.com/jbcodeforce/java-studies/tree/master/JEEPlay/src/main/test/jbcodeforce/it/ServletEndPointIT.java).
+See above steps materialized in code in JEEPlay/... [HelloServlet.java](https://github.com/jbcodeforce/java-studies/tree/master/JEEPlay/src/main/java/jbcodeforce/servlet/HelloServlet.java) and [ServletEndPointIT.java](https://github.com/jbcodeforce/java-studies/blob/master/JEEPlay/src/test/java/jbcodeforce/it/ServletEndPointIT.java).
 
 The `javax.servlet.annotation.WebServlet` helps to replace the web.xml file and servlet section to define name, urlPattern, load on startup...
 * For integration tests or connecting to remote end point, use the Apache [commons client.](https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/index.html).
