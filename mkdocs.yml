@@ -2,6 +2,7 @@ site_name: Java Studies and Algo play ground
 repo_url: https://github.com/jbcodeforce/Java-studies
 nav:
   - Introduction: index.md
+  - Microprofile: microprofile.md
  
 
 theme: 
