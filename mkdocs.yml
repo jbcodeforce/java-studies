@@ -3,6 +3,8 @@ repo_url: https://github.com/jbcodeforce/Java-studies
 nav:
   - Introduction: index.md
   - Microprofile: microprofile.md
+  - MQ challenge: mqChallenge.md
+  - Java FAQ: FAQ.md
  
 
 theme: 
