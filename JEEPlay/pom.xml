@@ -61,6 +61,13 @@
        <version>1.0.4</version>
        <scope>test</scope>
      </dependency>
+     <!-- org.apache.cxf.jaxrs.provider.jsrjsonp -->
+     <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-extension-providers</artifactId>
+            <version>3.2.6</version>
+            <scope>test</scope>
+        </dependency>
   </dependencies>
 
   <build>

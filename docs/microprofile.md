@@ -118,8 +118,7 @@ The folders microprofile30/service-a and service-b have the generated code. From
 * The @ApplicationPath annotation has a value that indicates the path within the WAR that the JAX-RS application accepts requests from.
 * Clear have one Resource class for the same resource type. The @Path annotation on the class indicates that this resource responds to specified path of the JAX-rS application. JAX-RS maps the HTTP methods on the URL to the methods on the class. [SystemPropertiesResource](https://github.com/jbcodeforce/java-studies/blob/master/JEEPlay/src/main/java/jbcodeforce/microprofile/app/SystemPropertiesResource.java)
 * The JAX-RS 2.1 specification mandates JSON-Binding (JSON-B) and JAX-B.
-
-http://localhost:9080/JEEPlay/System/properties
+* Example of results : [http://localhost:9080/JEEPlay/System/properties](http://localhost:9080/JEEPlay/System/properties)
 
 ## Concepts
 
