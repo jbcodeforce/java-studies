@@ -233,7 +233,7 @@
               <stripVersion>true</stripVersion>
               <looseApplication>true</looseApplication>     
               <installAppPackages>project</installAppPackages>
-              <configDirectory>${project.basedir}/src/main/liberty/server</configDirectory>
+              <configDirectory>${project.basedir}/src/main/liberty</configDirectory>
               <bootstrapProperties>
                	<default.http.port>${http.port}</default.http.port>
                 <default.https.port>${https.port}</default.https.port>

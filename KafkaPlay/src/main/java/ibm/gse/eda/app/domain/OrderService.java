@@ -1,20 +1,24 @@
 package ibm.gse.eda.app.domain;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import java.util.logging.Logger;
 
-import ibm.gse.eda.app.infrastructure.events.EventEmitter;
+import javax.enterprise.context.ApplicationScoped;
+
+import ibm.gse.eda.app.OrderManagementResource;
 import ibm.gse.eda.app.infrastructure.events.OrderEvent;
 import ibm.gse.eda.app.infrastructure.events.OrderPayload;
 import ibm.gse.eda.app.infrastructure.kafka.OrderEventProducer;
 
 @ApplicationScoped
 public class OrderService {
+	private static final Logger logger = Logger.getLogger(OrderService.class.getName());
 
-	@Inject
+	
 	private OrderEventProducer eventProducer;
 	
-	public OrderService() {}
+	public OrderService() {
+		eventProducer = new OrderEventProducer();
+	}
 	
 	public OrderService(OrderEventProducer eventProducer) {
 		this.eventProducer = eventProducer;
@@ -31,9 +35,9 @@ public class OrderService {
 				order.getDeliveryAddress());
 		orderEvent.setPayload(orderPayload);
 		try {
+			logger.info("emit event for " + order.getOrderID());
 			eventProducer.emit(orderEvent);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

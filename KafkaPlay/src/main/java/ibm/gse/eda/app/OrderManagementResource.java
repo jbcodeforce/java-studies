@@ -1,5 +1,7 @@
 package ibm.gse.eda.app;
 
+import java.util.logging.Logger;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -15,6 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import ibm.gse.eda.app.domain.OrderEntity;
 import ibm.gse.eda.app.domain.OrderService;
@@ -23,6 +26,7 @@ import ibm.gse.eda.app.dto.OrderCreateParameters;
 @Path("orders")
 @RequestScoped
 public class OrderManagementResource {
+	private static final Logger logger = Logger.getLogger(OrderManagementResource.class.getName());
 
 	@Inject
 	@ConfigProperty(name="message")
@@ -44,13 +48,15 @@ public class OrderManagementResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Request to create an order", description = "")
+	@Traced(value = true, operationName = "create order")
     @APIResponses(value = {
             @APIResponse(responseCode = "400", description = "Bad create order request", content = @Content(mediaType = "text/plain")),
             @APIResponse(responseCode = "200", description = "Order created, return order unique identifier", content = @Content(mediaType = "text/plain")) })
-	public Response createShippingOrder(OrderCreateParameters orderParameters) {
+	public Response createOrder(OrderCreateParameters orderParameters) {
 		if (orderParameters == null ) {
 			return Response.status(400, "No parameter sent").build();
 		}
+		logger.info("process order for " + orderParameters.getCustomerID());
 		OrderEntity order = OrderFactory.createNewOrder(orderParameters);
 		try {
 			

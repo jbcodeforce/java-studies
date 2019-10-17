@@ -50,6 +50,7 @@ Properties:
 
 * [Open Liberty developer tool for eclipse](https://marketplace.eclipse.org/category/free-tagging/open-liberty)
 * [Super guides](https://openliberty.io/guides/)
+* [Understanding the liberty maven plugin](https://developer.ibm.com/wasdev/docs/installing-liberty-liberty-maven-plug/)
 
 
 ## Algo play 

@@ -3,8 +3,10 @@
 
     <featureManager>
         <feature>microProfile-3.0</feature>
+         <feature>usr:opentracingZipkin-0.31</feature>
     </featureManager>
 
+	<opentracingZipkin host="zipkin-reefershipmentsolution.apps.green-with-envy.ocp.csplab.local" />
 	<httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
       id="defaultHttpEndpoint" host="*" />
 

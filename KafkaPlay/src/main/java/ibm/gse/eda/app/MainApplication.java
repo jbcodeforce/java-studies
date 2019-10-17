@@ -8,7 +8,6 @@ import javax.ws.rs.core.Application;
  * REST app needs an Application instance.
  */
 @ApplicationPath("/")
-@ApplicationScoped
 public class MainApplication extends Application{
 
 }

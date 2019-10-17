@@ -5,7 +5,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -27,7 +26,6 @@ import ibm.gse.eda.app.infrastructure.kafka.OrderEventsAgent;
  *
  */
 @WebListener
-@ApplicationScoped
 public class AgentsInitializer implements ServletContextListener{
     private static final Logger logger = Logger.getLogger(AgentsInitializer.class.getName());
 

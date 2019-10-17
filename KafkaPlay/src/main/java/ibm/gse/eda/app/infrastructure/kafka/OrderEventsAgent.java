@@ -60,7 +60,7 @@ public class OrderEventsAgent implements Runnable {
 				for (OrderEvent event : events) {
 					handle(event);
 				}
-			} catch (KafkaException ke ) {
+			} catch (KafkaException  ke) {
 				ke.printStackTrace();
 				// when issue on getting data from topic we need to reconnect
 				stop();

@@ -59,7 +59,7 @@ public class OrderEventProducer implements EventEmitter {
 	        Future<RecordMetadata> send = kafkaProducer.send(record);
 	        try {
 				send.get(KafkaConfiguration.PRODUCER_TIMEOUT_SECS, TimeUnit.SECONDS);
-			} catch (ExecutionException | TimeoutException e) {
+			} catch (ExecutionException e) {
 				e.printStackTrace();
 			}
 	    }
