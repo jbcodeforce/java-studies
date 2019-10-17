@@ -34,14 +34,18 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
 * **Config**: externalizes configuration and obtain config via injection from config files, environment variables, system properties, or custom resource.
     ```java
     // inject property with default value
-    @Inject @ConfigProperty(„MAX _ ITEM _ COUNT _ KEY“, defaultValue=”100”)
-    Integer maxItemCount;
+    @Inject @ConfigProperty("topicName", defaultValue=”orders”)
+    String topicName;
     ```
-* [Fault Tolerance](https://microprofile.io/project/eclipse/microprofile-fault-tolerance) enables us to build resilient microservices by separating the execution logic from business logic. Key aspects of the Fault Tolerance API includes well known resilience patterns like TimeOut, RetryPolicy, Fallback, Bulkhead, and Circuit Breaker processing.
+
+   We need `mpConfig-1.3` or `microprofile-3.0` feature.
+
+* [Fault Tolerance](https://microprofile.io/project/eclipse/microprofile-fault-tolerance) enables us to build resilient microservices by separating the execution logic from business logic. Key aspects of the Fault Tolerance API includes well known resilience patterns like TimeOut, RetryPolicy, Fallback, Bulkhead (isolate failure), and Circuit Breaker (fail fast) processing.
 
     ```java
     @GET
     @Timeout(500)
+    @Retry(delay = 200, maxRetries = 2, jitter = 100, retryOn = IOException.class)
     @Fallback(fallbackMethod = “getBestsellersFallback”)
     public Response getPersonalRecommendations() throws InterruptedException {
         // retrieve personal recommendations by delegating the call to
@@ -53,6 +57,7 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
     }
     ```
 
+    The @Timeout annotation specifies the time in milliseconds allowed for the request to finish 
 * **Health Check** lets developers define and expose a domain-specific microservices health status (“UP” or “DOWN”) so unhealthy services can be restarted by the underlying environment. Health checks are used to determine
 both the liveness and readiness of a service. Determining the state of a service can be composed by a set
 of verification procedures. Multiple domain-specific health checks can easily be added to a microservice
@@ -83,9 +88,9 @@ by implementing the corresponding HealthCheck interface.
     @POST
     @Produces(MediaType.APPLICATION _ JSON)
     @Timed(absolute = true,
-        name = „microprofile.ecommerce.checkout“,
-        displayName = „check-out time“,
-        description = „time of check-out process in ns“,
+        name = "microprofile.ecommerce.checkout",
+        displayName = "check-out time",
+        description = "time of check-out process in ns",
         unit = MetricUnits.NANOSECONDS)
     public Response checkOut(...) {
         // do some check-out specific business logic
@@ -133,4 +138,13 @@ When a bean needs to be persistent between all of the clients (singleton), use t
 
 Add the `@RequestScoped` annotation on the class to indicate that this bean is to be initialized once for every request. Request scope is short-lived and is therefore ideal for HTTP requests.
 
-The `@Inject` annotation indicates a dependency injection. 
+The `@Inject` annotation indicates a dependency injection for application concept beans.
+
+### SSL client connection
+
+When an application deployed in your app server, like Open Liberty, needs to access to a server end point over TLS (SSL), we need to make the server public certificate is available to the Java client JVM. The certificate is persisted in a Truststore.
+
+In open liberty the server.xml define where to find the truststore:
+```
+
+```

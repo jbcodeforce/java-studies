@@ -10,7 +10,8 @@ See [this tutorial](https://www.baeldung.com/maven-multi-module) for multi modul
 mvn archetype:generate -DgroupId=jbcodeforce -DartifactId=Java-studies
 ```
 * Change the `<packaging>` element to `pom` 
-* Define each module in separate child folder with its own pom. using
+* Define each module in separate child folder with its own pom using the command:
+
 ```shell
 mvn archetype:generate -DgroupId=jbcodeforce  -DartifactId=AlgoPlay
 ```
@@ -20,6 +21,10 @@ By building the project through the aggregator POM, each project that has packag
 By setting packaging to pom type, we're declaring that project will serve as a parent or an aggregator for other sub module project. A module element is added to the parent project
 
 When running `mvn package` command in the parent project directory, Maven will build and test all the dependant modules.
+
+!!! note
+		Recall that maven `profile` helps to define specific environments for maven execution. to set some different runtime properties. Useful for testing and production packaging.
+		`mvn package -P test`. See some examples [here](https://www.mkyong.com/maven/maven-profiles-example/)
 
 ### Specific open liberty maven declaration
 
@@ -40,6 +45,12 @@ Properties:
 <package.file>${project.build.directory}/${app.name}.zip</package.file>
 <packaging.type>usr</packaging.type>
 ```
+
+### Open liberty links
+
+* [Open Liberty developer tool for eclipse](https://marketplace.eclipse.org/category/free-tagging/open-liberty)
+* [Super guides](https://openliberty.io/guides/)
+
 
 ## Algo play 
 
@@ -140,6 +151,11 @@ See the simplest examples of Flux code in src/test/main/jbcodeforce/react/Reacto
 
 
 See [Project Reactor](http://projectreactor.io/docs/core/release/reference/#intro-reactive)
+
+
+## Kafka
+
+See [this dedicated note](kafka.md) for how to do end to end event driven microservice with kafka.
 
 
 ## MQ

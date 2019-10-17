@@ -69,5 +69,6 @@
     <module>AlgoPlay</module>
     <module>JEEPlay</module>
     <module>mqChallenge</module>
+    <module>KafkaPlay</module>
   </modules>
 </project>

@@ -89,7 +89,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.2</version>
                 <configuration>
-                	<failOnMissingWebXml>false</failOnMissingWebXml>
+                	<failOnMissingWebXml>${failOnMissingWebXml}</failOnMissingWebXml>
                     <packagingExcludes>pom.xml</packagingExcludes>
                 </configuration>
             </plugin>

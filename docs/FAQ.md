@@ -21,3 +21,6 @@ Gson parser = new Gson();
 AssetEvent[] assets = parser.fromJson(new JsonReader(input), AssetEvent[].class);
 ```
 
+### Json binding JSR 367
+
+[Introduction from Baeldung](https://www.baeldung.com/java-json-binding-api)

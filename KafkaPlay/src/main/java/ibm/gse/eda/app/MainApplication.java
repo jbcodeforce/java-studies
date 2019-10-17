@@ -1,0 +1,14 @@
+package ibm.gse.eda.app;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+
+/**
+ * REST app needs an Application instance.
+ */
+@ApplicationPath("/")
+@ApplicationScoped
+public class MainApplication extends Application{
+
+}

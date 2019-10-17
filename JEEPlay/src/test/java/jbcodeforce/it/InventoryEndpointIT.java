@@ -82,7 +82,7 @@ public class InventoryEndpointIT {
                  actual);
 
     boolean localhostExists = obj.getJsonArray("systems").getJsonObject(0)
-                                 .get("hostname").toString()
+                                 .get("localhost").toString()
                                  .contains("localhost");
     assertTrue("A host was registered, but it was not localhost",
                localhostExists);
