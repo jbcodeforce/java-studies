@@ -15,6 +15,8 @@ import javax.json.bind.JsonbBuilder;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import ibm.gse.eda.app.infrastructure.events.EventEmitter;
 import ibm.gse.eda.app.infrastructure.events.OrderEvent;
@@ -41,6 +43,13 @@ public class OrderEventProducer implements EventEmitter {
 	    }
 	    
 	    @Override
+	    @Retry(retryOn=TimeoutException.class,
+	    maxRetries = 4,
+        maxDuration = 10000,
+        delay = 200,
+        jitter = 100,
+        abortOn=InterruptedException.class)
+	    @Timeout(KafkaConfiguration.PRODUCER_TIMEOUT_SECS * 1000)
 	    public void emit(OrderEvent orderEvent) throws Exception  {
 	    	String value = jsonb.toJson(orderEvent);
 	    	logger.info("Send " + value);
@@ -50,7 +59,7 @@ public class OrderEventProducer implements EventEmitter {
 	        Future<RecordMetadata> send = kafkaProducer.send(record);
 	        try {
 				send.get(KafkaConfiguration.PRODUCER_TIMEOUT_SECS, TimeUnit.SECONDS);
-			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			} catch (ExecutionException | TimeoutException e) {
 				e.printStackTrace();
 			}
 	    }

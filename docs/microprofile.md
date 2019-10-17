@@ -57,7 +57,9 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
     }
     ```
 
-    The @Timeout annotation specifies the time in milliseconds allowed for the request to finish 
+    The `@Timeout` annotation specifies the time in milliseconds allowed for the request to finish. This is to avoid the user interface to wait forever.
+    The `@Retry` helps to recover from network or remote microservice transient failures. The retryOn specifies the exception to trigger the retry. `delay` specifies the amount of time to wait before retrying a request. `jitter` specifies a variation to apply to the delay interval between retries.
+
 * **Health Check** lets developers define and expose a domain-specific microservices health status (“UP” or “DOWN”) so unhealthy services can be restarted by the underlying environment. Health checks are used to determine
 both the liveness and readiness of a service. Determining the state of a service can be composed by a set
 of verification procedures. Multiple domain-specific health checks can easily be added to a microservice
