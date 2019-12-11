@@ -1,6 +1,6 @@
 # Kafka based microservice
 
-This is some development note to keep in mind for Kafka development. Most of the content is already defined in [those best practices](https://ibm-cloud-architecture.github.io/refarch-eda/kafka/readme/). Here the code is used as a template to start a project.
+This is some development note to keep in mind for Kafka development. Most of the content is already defined in [those best practices](https://ibm-cloud-architecture.github.io/refarch-eda/kafka/readme/). Here the code in KafkaPlay is used as a template to start a project.
 
 Code is under KafkaPlay with readme to explain how to build and run it.
 

@@ -2,8 +2,8 @@
 
 ## Multi-module maven
 
-This project includes different modules to test different subject related to the java last language features
-See [this tutorial](https://www.baeldung.com/maven-multi-module) for multi modules.
+This project includes different modules to test different subjects related to the java last language features and other topics on Java, like reactive messaging, kafka, ...
+See [this tutorial](https://www.baeldung.com/maven-multi-module) to understand maven multi modules.
  
 * Define an aggregator POM
 ```shell
@@ -18,12 +18,12 @@ mvn archetype:generate -DgroupId=jbcodeforce  -DartifactId=AlgoPlay
 
 By building the project through the aggregator POM, each project that has packaging type different than pom will result in a built archive file
 
-By setting packaging to pom type, we're declaring that project will serve as a parent or an aggregator for other sub module project. A module element is added to the parent project
+By setting packaging to pom type, we're declaring that project will serve as a parent or an aggregator for other sub module project. A module element is added to the parent project.
 
 When running `mvn package` command in the parent project directory, Maven will build and test all the dependant modules.
 
 !!! note
-		Recall that maven `profile` helps to define specific environments for maven execution. to set some different runtime properties. Useful for testing and production packaging.
+		Recall that maven `profile` helps to define specific environments for maven execution. It is useful, to set some different runtime properties. Useful for testing and production packaging.
 		`mvn package -P test`. See some examples [here](https://www.mkyong.com/maven/maven-profiles-example/)
 
 ### Specific open liberty maven declaration
@@ -158,6 +158,9 @@ See [Project Reactor](http://projectreactor.io/docs/core/release/reference/#intr
 
 See [this dedicated note](kafka.md) for how to do end to end event driven microservice with kafka.
 
+## Reactive messaging
+
+See the extensive doc from [SmallRye](https://smallrye.io/smallrye-reactive-messaging/) and the code under 
 
 ## MQ
 
