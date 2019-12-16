@@ -1,0 +1,8 @@
+{
+    "note" : "This file contains simple data for testing",
+    "records" : [
+        { "name" : "Julie" , "count" : 15},
+        { "name" : "Mathieu" , "count" : 27},
+        { "name" : "Caroline" , "count" : 30}
+    ]
+}

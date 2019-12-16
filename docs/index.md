@@ -137,6 +137,20 @@ The `javax.servlet.annotation.WebServlet` helps to replace the web.xml file and 
 
 See also [this tutorial](https://www.tutorialspoint.com/servlets/index.htm) on servlet.
 
+## Microprofile
+
+See [this note for summary and studies](microprofile.md)
+
+## JAX-RS client FAQ
+
+### Create a client
+
+```
+```
+
+### Create a client using header
+
+
 ## Reactor
 
 Reactor is an implementation of the Reactive Programming paradigm, which can be summed up as: it is an asynchronous programming concerned with data streams and the propagation of change.
@@ -168,5 +182,8 @@ This is the implementation of [the MQ developer tutorial](https://developer.ibm.
 ![](https://developer.ibm.com/messaging/wp-content/uploads/sites/18/2018/08/LearnMQbadgeDiag1.png)
 
 Code to subscribe to topic, and put, get from Queue. It includes a Docker image with MQ embbedded [more explanation here.](mqChallenge/README.md)
+
+## Developing with VSCode and Redhat extension
+
 
 

@@ -5,9 +5,7 @@ import java.io.StringReader;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.ws.Endpoint;
 import javax.xml.ws.Provider;
-import javax.xml.ws.http.HTTPBinding;
 
 public class SimplestServer implements Provider<Source>{
 
