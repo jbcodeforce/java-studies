@@ -150,6 +150,13 @@ See [this note for summary and studies](microprofile.md)
 
 ### Create a client using header
 
+```
+```
+
+### Client for HTTPs connection
+
+```
+```
 
 ## Reactor
 

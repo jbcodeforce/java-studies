@@ -42,6 +42,7 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
 ![Microprofile](images/microprofile3.png)
 
 * **Config**: externalizes configuration and obtain config via injection from config files, environment variables, system properties, or custom resource.
+MicroProfile Config uses Contexts and Dependency Injection (CDI) to inject configuration property values directly into an application without requiring user code to retrieve them.
 
     ```java
     // inject property with default value
@@ -50,6 +51,8 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
     ```
 
    We need `mpConfig-1.3` or `microprofile-3.0` feature.
+
+See [configuration for microprofile git repo](https://github.com/eclipse/microprofile-config). And [this tutorial](https://openliberty.io/guides/microprofile-config-intro.html#example-devops-pipeline).
 
 * [Fault Tolerance](https://microprofile.io/project/eclipse/microprofile-fault-tolerance) enables us to build resilient microservices by separating the execution logic from business logic. Key aspects of the Fault Tolerance API includes well known resilience patterns like TimeOut, RetryPolicy, Fallback, Bulkhead (isolate failure), and Circuit Breaker (fail fast) processing.
 
