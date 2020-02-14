@@ -13,14 +13,18 @@ Two way to implement the communication between services:
 
 ### With appsody
 
-Create a microprofile 3.0 with appsody command: `appsody init java-microprofile`, which download the java microprofile code template with "health, liveness and metrics and a hello API". followed by `appsody build` or `appsody run`.
+Create a microprofile 3.0 with appsody command: `appsody init java-microprofile`, which downloads the java microprofile code template with "health, liveness and metrics and a hello world API".
+`appsody run` or `appsody test` to continuously see the impact from the code updates.
 
 ### With maven
 
+Use the [Generate tool at start.microprofile.io](https://start.microprofile.io/).
+
+Run with `mvn liberty:dev` to listen to file changes.
+
 ## Cross cutting concerns
 
-Cross-cutting concerns are common to all microservice and include logging, monitoring of service health and
-metrics, fault tolerance, configuration, and security.
+Cross-cutting concerns are common to all microservice and include logging, monitoring of service health and metrics, fault tolerance, configuration, and security.
 
 * Support distributed logging and tracing cross microservices, that can be merged and analyzed as a whole.
 * Without a single point of control, each microservice needs to know if it is healthy and perform as expected.
@@ -28,7 +32,7 @@ metrics, fault tolerance, configuration, and security.
 * microservice accesses configurations from multiple sources in a homogeneous and transparent way
 * support a mechanism to handle distributed authentication and authorization
 * offer security context propagation
-* make sure that the original service call is not forged in the authentication  process.
+* make sure that the original service call is not forged in the authentication process.
 
 ## Programming model
 
@@ -40,19 +44,36 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
 * JSON-B 1.0 for JSON Binding
 
 ![Microprofile](images/microprofile3.png)
+As illustrated in the figure above Microprofile 3.0 bundles a set of features. we will study below:
 
-* **Config**: externalizes configuration and obtain config via injection from config files, environment variables, system properties, or custom resource.
+* **Config**: externalizes configuration and obtain config via injection from config files, environment variables, system properties, or custom resource. Those configurations are static, they cannot be modified while the server is running.
 MicroProfile Config uses Contexts and Dependency Injection (CDI) to inject configuration property values directly into an application without requiring user code to retrieve them.
 
     ```java
     // inject property with default value
-    @Inject @ConfigProperty("topicName", defaultValue=”orders”)
+    @Inject @ConfigProperty(name = "topicName")
     String topicName;
     ```
 
-   We need `mpConfig-1.3` or `microprofile-3.0` feature.
+MicroProfile Config combines configuration properties from multiple sources, each known as a ConfigSource. The config file is named `META-INF/microprofile-config.properties`
+
+The `@Inject` annotation injects the topic name directly, the injection value is static and fixed on application starting.
+
+It is possible to have dynamic configuration by implementing the `org.eclipse.microprofile.config.spi.ConfigSource` interface and using the java.util.ServiceLoader mechanism with configuration file in `META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource` to specifies the class name to use for loading configuration. The property to load dynamically has a Provider type:
+
+```java
+  @Inject
+  @ConfigProperty(name = "io_openliberty_guides_inventory_inMaintenance")
+  private Provider<Boolean> inMaintenance;
+```
+
+It forces the service to retrieve the inMaintenance value just in time. This retrieval of the value just in time makes the config injection dynamic and able to change without having to restart the application.
+
+To enable this capability, we need `mpConfig-1.3` or `microprofile-3.0` feature.
 
 See [configuration for microprofile git repo](https://github.com/eclipse/microprofile-config). And [this tutorial](https://openliberty.io/guides/microprofile-config-intro.html#example-devops-pipeline).
+
+* [CDI]() Contexts and Dependency Injection (CDI) to manage scopes and inject dependencies
 
 * [Fault Tolerance](https://microprofile.io/project/eclipse/microprofile-fault-tolerance) enables us to build resilient microservices by separating the execution logic from business logic. Key aspects of the Fault Tolerance API includes well known resilience patterns like TimeOut, RetryPolicy, Fallback, Bulkhead (isolate failure), and Circuit Breaker (fail fast) processing.
 

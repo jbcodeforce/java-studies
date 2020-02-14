@@ -52,6 +52,9 @@ Properties:
 * [Super guides](https://openliberty.io/guides/)
 * [Understanding the liberty maven plugin](https://developer.ibm.com/wasdev/docs/installing-liberty-liberty-maven-plug/)
 
+### Debug Openliberty app
+
+Start `mvn liberty:debug`, the console should display the port number, it listens to (7777). Then in Eclipse define a debud configuration for a `remote java application`, use localhost and the matching port number. Any breakpoint in the code should be reachable.
 
 ## Algo play 
 
@@ -141,11 +144,34 @@ See also [this tutorial](https://www.tutorialspoint.com/servlets/index.htm) on s
 
 See [this note for summary and studies](microprofile.md)
 
+## JAX-RS resource
+
+In JAX-RS, a single class should represent a single resource, or a group of resources of the same type.
+
+The `@Path` annotation on the resource class indicates that this resource responds to the properties path in the JAX-RS application. The `@ApplicationPath` annotation in the SystemApplication class together with the `@Path` annotation in the resource class indicates the URL the resource is available at.
+
+JAX-RS maps the HTTP methods on the URL to the methods on the class. The method to call is determined by the annotations that are specified on the methods.
+
+The `@Produces` annotation indicates the format of the content that will be returned.
+
 ## JAX-RS client FAQ
 
 ### Create a client
 
-```
+```java
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+
+Client client = ClientBuilder.newClient();
+
+WebTarget target = client.target(url);
+Response response = target.request().get();
+response.getStatus();
+String json = response.readEntity(String.class);
+// transform json string
+response.close();
 ```
 
 ### Create a client using header

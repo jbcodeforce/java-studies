@@ -3,6 +3,7 @@ site/
 JEEPlay/target/
 KafkaPlay/target/
 KafkaPlay/.settings/
+KafkaPlay/.cw-settings
 microprofile30/service-a/target/
 microprofile30/service-b/target/
 microprofile30/appsody-code/target/

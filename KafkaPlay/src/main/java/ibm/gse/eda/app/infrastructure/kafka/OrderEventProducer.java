@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -37,9 +38,17 @@ public class OrderEventProducer implements EventEmitter {
 	    }
 	    
 	    protected void init() {
-	    	Properties properties = kafkaConfiguration.getProducerProperties("order-event-producer");
+	    	Properties properties = getKafkaConfiguration().getProducerProperties("order-event-producer");
 	        kafkaProducer = new KafkaProducer<String, String>(properties);
 	    	
+	    }
+	    
+	    public KafkaConfiguration getKafkaConfiguration() {
+	    	// to bypass some strange NPE, as inject does not seem to work
+	    	if (kafkaConfiguration == null ) {
+	    		kafkaConfiguration = new KafkaConfiguration();
+	    	}
+	    	return kafkaConfiguration;
 	    }
 	    
 	    @Override
@@ -54,9 +63,22 @@ public class OrderEventProducer implements EventEmitter {
 	    	String value = jsonb.toJson(orderEvent);
 	    	logger.info("Send " + value);
 	    	String key = orderEvent.getPayload().getOrderID();
-	        ProducerRecord<String, String> record = new ProducerRecord<>(kafkaConfiguration.getOrdersTopicName(), key, value);
+	        ProducerRecord<String, String> record = new ProducerRecord<>(getKafkaConfiguration().getOrdersTopicName(), key, value);
 
-	        Future<RecordMetadata> send = kafkaProducer.send(record);
+	        Future<RecordMetadata> send = kafkaProducer.send(record, 
+	        		new Callback() {
+
+						@Override
+						public void onCompletion(RecordMetadata metadata, Exception exception) {
+							if (exception != null) {
+								exception.printStackTrace();
+							} else {
+							   System.out.println("The offset of the record we just sent is: " + metadata.offset());
+				                   
+							}
+						}
+	        		}
+	        );
 	        try {
 				send.get(KafkaConfiguration.PRODUCER_TIMEOUT_SECS, TimeUnit.SECONDS);
 			} catch (ExecutionException e) {

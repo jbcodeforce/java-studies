@@ -38,6 +38,12 @@ public class OrderManagementResource {
 	
 	}
 	
+	public OrderService getOrCreateOrderService() {
+		if (orderService == null) {
+			orderService = new OrderService();
+		}
+		return orderService;
+	}
 	@GET
     @Produces({ MediaType.TEXT_PLAIN })
     public Response getMessage() {
@@ -48,22 +54,24 @@ public class OrderManagementResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Request to create an order", description = "")
-	@Traced(value = true, operationName = "create order")
     @APIResponses(value = {
             @APIResponse(responseCode = "400", description = "Bad create order request", content = @Content(mediaType = "text/plain")),
             @APIResponse(responseCode = "200", description = "Order created, return order unique identifier", content = @Content(mediaType = "text/plain")) })
 	public Response createOrder(OrderCreateParameters orderParameters) {
+		
 		if (orderParameters == null ) {
 			return Response.status(400, "No parameter sent").build();
 		}
+		
 		logger.info("process order for " + orderParameters.getCustomerID());
 		OrderEntity order = OrderFactory.createNewOrder(orderParameters);
 		try {
 			
-			orderService.createOrder(order);
+			getOrCreateOrderService().createOrder(order);
 		} catch(Exception e) {
 			return Response.serverError().build();
 		}
+		
 	    return Response.ok().entity(order.getOrderID()).build();
 	}
 }

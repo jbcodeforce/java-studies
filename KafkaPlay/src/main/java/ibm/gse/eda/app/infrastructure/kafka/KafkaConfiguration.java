@@ -29,7 +29,7 @@ public class KafkaConfiguration {
   
     @Inject 
     @ConfigProperty(name = "ordersTopicName")
-    private String ordersTopicName;
+    protected String ordersTopicName;
     
     public KafkaConfiguration() {}
     
@@ -83,6 +83,10 @@ public class KafkaConfiguration {
     }
 
 	public String getOrdersTopicName() {
+		System.out.println(ordersTopicName);
+		if (ordersTopicName == null) {
+			ordersTopicName = "orders";
+		}
 		return ordersTopicName;
 	}
 

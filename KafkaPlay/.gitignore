@@ -1,2 +1,6 @@
 target/
 setenv.sh
+.settings/
+kconnect/config/console-consumer.properties
+kconnect/config/worker-standalone.properties
+kconnect/setenv.sh

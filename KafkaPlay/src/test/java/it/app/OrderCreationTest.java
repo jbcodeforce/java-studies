@@ -49,7 +49,7 @@ public class OrderCreationTest {
     @Test
     public void shouldCreateOrder() {
     	Address destinationAddress = new Address("Street", "City", "DestinationCountry", "State", "Zipcode");
-    	OrderCreateParameters inOrder = new OrderCreateParameters("C01", "productID",10, destinationAddress);
+    	OrderCreateParameters inOrder = new OrderCreateParameters("C11", "P02",10, destinationAddress);
     	
     	String inOrderJson = jsonb.toJson(inOrder);
         response =  client.target(baseUrl + ORDERS_ENDPOINT).request().post(Entity.entity(inOrderJson, MediaType.APPLICATION_JSON_TYPE));
