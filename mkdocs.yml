@@ -6,7 +6,8 @@ nav:
   - Concurrency : concurrent.md
   - MQ challenge: mqChallenge.md
   - Java FAQ: FAQ.md
- 
+  - VScode: java-vscode.md
+  - Compendium: compendium.md
 
 theme: 
   name: material
