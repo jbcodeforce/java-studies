@@ -1,15 +1,21 @@
 # Some Java studies
 
-## Multi-module maven
+## Maven
+
+Update maven cli: download it from http://maven.apache.org/download.cgi, unzip to ~/Tools. modify $PATH.
+
+### Multi-module maven
 
 This project includes different modules to test different subjects related to the java last language features and other topics on Java, like reactive messaging, kafka, ...
 See [this tutorial](https://www.baeldung.com/maven-multi-module) to understand maven multi modules.
  
 * Define an aggregator POM
+
 ```shell
 mvn archetype:generate -DgroupId=jbcodeforce -DartifactId=Java-studies
 ```
-* Change the `<packaging>` element to `pom` 
+
+* Change the `<packaging>` element to `pom`
 * Define each module in separate child folder with its own pom using the command:
 
 ```shell
@@ -20,11 +26,61 @@ By building the project through the aggregator POM, each project that has packag
 
 By setting packaging to pom type, we're declaring that project will serve as a parent or an aggregator for other sub module project. A module element is added to the parent project.
 
-When running `mvn package` command in the parent project directory, Maven will build and test all the dependant modules.
+When running `mvn package` command in the parent project directory, Maven will build and test all the dependant modules. To bypass integration test: `mvn install -DskipITs`
 
 !!! note
 		Recall that maven `profile` helps to define specific environments for maven execution. It is useful, to set some different runtime properties. Useful for testing and production packaging.
 		`mvn package -P test`. See some examples [here](https://www.mkyong.com/maven/maven-profiles-example/)
+
+### Maven building jars with dependency
+
+First you need to declare to use the assembly plugin, in the 
+
+```xml
+<build>
+    <pluginManagement>
+	 <plugins>
+		<plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.0.0</version>
+          <configuration>
+            <phase>package</phase>
+            <archive>
+              <manifest>
+                <mainClass>${fully.qualified.main.class}</mainClass>
+              </manifest>
+            </archive>
+            <descriptorRefs>
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+</build>
+```
+
+Then in the plugins section add the execution stanza to specify when to run the assembly.
+
+```xml
+ <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+```
+
+### Maven profiles
+
+[Profile](http://maven.apache.org/guides/introduction/introduction-to-profiles.html) helps to use different configuration for different environment. They modify the POM at build time, and are meant to be used in complementary sets to give equivalent-but-different parameters for a set of target environments.
+Profiles can be explicitly specified using the `-P profilename`, or in the activeProfiles in the settings.xml file.
 
 ### Specific open liberty maven declaration
 
@@ -55,6 +111,7 @@ Properties:
 ### Debug Openliberty app
 
 Start `mvn liberty:debug`, the console should display the port number, it listens to (7777). Then in Eclipse define a debud configuration for a `remote java application`, use localhost and the matching port number. Any breakpoint in the code should be reachable.
+
 
 ## Algo play 
 

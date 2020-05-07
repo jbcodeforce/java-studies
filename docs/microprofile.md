@@ -22,17 +22,28 @@ Use the [Generate tool at start.microprofile.io](https://start.microprofile.io/)
 
 Run with `mvn liberty:dev` to listen to file changes.
 
+### Run with docker
+
+Once the application is created and built, we can also define a docker file and run it. From [this openliberty guides](https://openliberty.io/guides/docker.html) here is a quick summary:
+
+* The open liberty maven plugin add an execution to create the server, install features, and deploy the app as part of the ` mvn package` command.
+* docker build and then docker run it by mounting the war file:
+
+```shell
+docker run -ti --network kafkanet -p 9081:9081 -v $(pwd)/target/PerfConsumerApp.war:/config/dropins/PerfConsumerApp.war ibmcase/perfconsumerapp 
+```
+
 ## Cross cutting concerns
 
 Cross-cutting concerns are common to all microservice and include logging, monitoring of service health and metrics, fault tolerance, configuration, and security.
 
 * Support distributed logging and tracing cross microservices, that can be merged and analyzed as a whole.
 * Without a single point of control, each microservice needs to know if it is healthy and perform as expected.
-* microservices architecture needs to be resilient and fault tolerant by design. This means we must not only be able to detect but also to handle any issue automatically.
-* microservice accesses configurations from multiple sources in a homogeneous and transparent way
-* support a mechanism to handle distributed authentication and authorization
-* offer security context propagation
-* make sure that the original service call is not forged in the authentication process.
+* Microservices architecture needs to be resilient and fault tolerant by design. This means we must not only be able to detect but also to handle any issue automatically.
+* Microservice accesses configurations from multiple sources in a homogeneous and transparent way
+* Support a mechanism to handle distributed authentication and authorization
+* Offer security context propagation
+* Make sure that the original service call is not forged in the authentication process.
 
 ## Programming model
 
@@ -46,7 +57,7 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
 ![Microprofile](images/microprofile3.png)
 As illustrated in the figure above Microprofile 3.0 bundles a set of features. we will study below:
 
-* **Config**: externalizes configuration and obtain config via injection from config files, environment variables, system properties, or custom resource. Those configurations are static, they cannot be modified while the server is running.
+* **Config**: externalizes configuration and obtains config via injection from config files, environment variables, system properties, or custom resource. Those configurations are static, they cannot be modified while the server is running.
 MicroProfile Config uses Contexts and Dependency Injection (CDI) to inject configuration property values directly into an application without requiring user code to retrieve them.
 
     ```java
@@ -73,7 +84,7 @@ To enable this capability, we need `mpConfig-1.3` or `microprofile-3.0` feature.
 
 See [configuration for microprofile git repo](https://github.com/eclipse/microprofile-config). And [this tutorial](https://openliberty.io/guides/microprofile-config-intro.html#example-devops-pipeline).
 
-* [CDI]() Contexts and Dependency Injection (CDI) to manage scopes and inject dependencies
+* [CDI](#CDI) Contexts and Dependency Injection (CDI) to manage scopes and inject dependencies
 
 * [Fault Tolerance](https://microprofile.io/project/eclipse/microprofile-fault-tolerance) enables us to build resilient microservices by separating the execution logic from business logic. Key aspects of the Fault Tolerance API includes well known resilience patterns like TimeOut, RetryPolicy, Fallback, Bulkhead (isolate failure), and Circuit Breaker (fail fast) processing.
 
@@ -176,6 +187,8 @@ When a bean needs to be persistent between all of the clients (singleton), use t
 Add the `@RequestScoped` annotation on the class to indicate that this bean is to be initialized once for every request. Request scope is short-lived and is therefore ideal for HTTP requests.
 
 The `@Inject` annotation indicates a dependency injection for application concept beans.
+
+Important to note that access to the injected bean could not be done in the contructor of the class using this injected bean. There is a problem of life cycle and so the host bean needs to be constructed before getting the injection.
 
 ### SSL client connection
 

@@ -2,7 +2,9 @@
 
 ## Some Editor tricks
 
-The access to the command pallette shft -> cmd -> P
+The access to the command pallette shift -> cmd -> P
+
+pallette and access to per to preview a file like a csv.
 
 ### Autocompletion
 

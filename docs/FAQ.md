@@ -1,5 +1,7 @@
 # FAQ
 
+## Java SE
+
 ### Read from a properties file
 
 ```java
@@ -24,3 +26,22 @@ AssetEvent[] assets = parser.fromJson(new JsonReader(input), AssetEvent[].class)
 ### Json binding JSR 367
 
 [Introduction from Baeldung](https://www.baeldung.com/java-json-binding-api)
+
+## JAXRS
+
+### Get startup and destroy event:
+
+```java
+@ApplicationScoped
+public class StartupListener {
+
+    public void init(@Observes
+                     @Initialized(ApplicationScoped.class) ServletContext context) {
+        // Perform action during application's startup
+    }
+
+    public void destroy(@Observes
+                        @Destroyed(ApplicationScoped.class) ServletContext context) {
+        // Perform action during application's shutdown
+    }
+```
