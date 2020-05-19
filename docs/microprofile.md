@@ -1,4 +1,4 @@
-# Microprofile Study
+# Microprofile 3.x notes
 
 [microprofile](https://microprofile.io/) is the java framework to develop microservice architecture. MicroProfile APIs establish an optimal foundation for developing microservices-based applications.
 
@@ -11,10 +11,15 @@ Two way to implement the communication between services:
 
 ## Create a microprofile app
 
+Those notes support the different microprofile projects of:
+
+* 
 ### With appsody
 
-Create a microprofile 3.0 with appsody command: `appsody init java-microprofile`, which downloads the java microprofile code template with "health, liveness and metrics and a hello world API".
+Create a [open liberty microprofile 3.3](https://github.com/appsody/stacks/tree/master/incubator/java-openliberty) with appsody command: `appsody init java-microprofile`, which downloads the java microprofile code template with "health, liveness and metrics and a hello world API".
 `appsody run` or `appsody test` to continuously see the impact from the code updates.
+
+To get the password for the metrics do the following: `docker exec -it my-project-dev  bash -c "grep keystore /opt/ol/wlp/usr/servers/defaultServer/server.env"`
 
 ### With maven
 
@@ -26,7 +31,7 @@ Run with `mvn liberty:dev` to listen to file changes.
 
 Once the application is created and built, we can also define a docker file and run it. From [this openliberty guides](https://openliberty.io/guides/docker.html) here is a quick summary:
 
-* The open liberty maven plugin add an execution to create the server, install features, and deploy the app as part of the ` mvn package` command.
+* The open liberty maven plugin add an execution to create the server, install features, and deploy the app as part of the `mvn package` command.
 * docker build and then docker run it by mounting the war file:
 
 ```shell
@@ -55,9 +60,11 @@ MicroProfile utilizes a very small subset of Java EE APIs to define its core pro
 * JSON-B 1.0 for JSON Binding
 
 ![Microprofile](images/microprofile3.png)
-As illustrated in the figure above Microprofile 3.0 bundles a set of features. we will study below:
+As illustrated in the figure above Microprofile 3.0 bundles a set of features:
 
-* **Config**: externalizes configuration and obtains config via injection from config files, environment variables, system properties, or custom resource. Those configurations are static, they cannot be modified while the server is running.
+### Config
+
+**Config**: externalizes configuration and obtains config via injection from config files, environment variables, system properties, or custom resource. Those configurations are static, they cannot be modified while the server is running.
 MicroProfile Config uses Contexts and Dependency Injection (CDI) to inject configuration property values directly into an application without requiring user code to retrieve them.
 
     ```java
@@ -84,9 +91,13 @@ To enable this capability, we need `mpConfig-1.3` or `microprofile-3.0` feature.
 
 See [configuration for microprofile git repo](https://github.com/eclipse/microprofile-config). And [this tutorial](https://openliberty.io/guides/microprofile-config-intro.html#example-devops-pipeline).
 
-* [CDI](#CDI) Contexts and Dependency Injection (CDI) to manage scopes and inject dependencies
+### CDI
 
-* [Fault Tolerance](https://microprofile.io/project/eclipse/microprofile-fault-tolerance) enables us to build resilient microservices by separating the execution logic from business logic. Key aspects of the Fault Tolerance API includes well known resilience patterns like TimeOut, RetryPolicy, Fallback, Bulkhead (isolate failure), and Circuit Breaker (fail fast) processing.
+[CDI](#CDI) Contexts and Dependency Injection (CDI) to manage scopes and inject dependencies
+
+## Fault tolerance
+
+[Fault Tolerance](https://microprofile.io/project/eclipse/microprofile-fault-tolerance) enables us to build resilient microservices by separating the execution logic from business logic. Key aspects of the Fault Tolerance API includes well known resilience patterns like TimeOut, RetryPolicy, Fallback, Bulkhead (isolate failure), and Circuit Breaker (fail fast) processing.
 
     ```java
     @GET
@@ -105,6 +116,8 @@ See [configuration for microprofile git repo](https://github.com/eclipse/micropr
 
     The `@Timeout` annotation specifies the time in milliseconds allowed for the request to finish. This is to avoid the user interface to wait forever.
     The `@Retry` helps to recover from network or remote microservice transient failures. The retryOn specifies the exception to trigger the retry. `delay` specifies the amount of time to wait before retrying a request. `jitter` specifies a variation to apply to the delay interval between retries.
+
+## Health Check
 
 * **Health Check** lets developers define and expose a domain-specific microservices health status (“UP” or “DOWN”) so unhealthy services can be restarted by the underlying environment. Health checks are used to determine
 both the liveness and readiness of a service. Determining the state of a service can be composed by a set

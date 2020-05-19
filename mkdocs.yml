@@ -2,7 +2,8 @@ site_name: Java Studies and Algo play ground
 repo_url: https://github.com/jbcodeforce/Java-studies
 nav:
   - Introduction: index.md
-  - Microprofile: microprofile.md
+  - Microprofile 3.x: microprofile.md
+  - Open Liberty: openliberty.md
   - Concurrency : concurrent.md
   - MQ challenge: mqChallenge.md
   - Java FAQ: FAQ.md
