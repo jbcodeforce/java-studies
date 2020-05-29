@@ -1,8 +1,18 @@
 # OpenLiberty notes
 
+## OpenLiberty Operator
+
+[OpenLiberty Operator](https://github.com/OpenLiberty/open-liberty-operator) deploy and manage applications running on Open Liberty into OKD or OpenShift clusters.
+
+Install it using the Operator Hub. Once installed the following commands 
+
+## Appsody stack
+
+The appsody stack for [open liberty using operator](https://github.com/appsody/stacks/tree/master/incubator/java-openliberty) is a good way to start a project.
+
 ### Specific open liberty maven declaration
 
-```
+```xml
 <parent>
 	<groupId>net.wasdev.wlp.maven.parent</groupId>
 	<artifactId>liberty-maven-app-parent</artifactId>

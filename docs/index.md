@@ -230,11 +230,11 @@ See [Project Reactor](http://projectreactor.io/docs/core/release/reference/#intr
 
 ## Kafka
 
-See [this dedicated note](kafka.md) for how to do end to end event driven microservice with kafka.
+See [this dedicated studies](https://jbcodeforce.github.io/kafka-studies/) for how to do end to end event driven microservice with kafka.
 
 ## Reactive messaging
 
-See the extensive doc from [SmallRye](https://smallrye.io/smallrye-reactive-messaging/) and the code under 
+See the extensive doc from [SmallRye](https://smallrye.io/smallrye-reactive-messaging/) and the code under [kafka studies - quarkus-reactive-msg](https://github.com/jbcodeforce/kafka-studies/tree/master/quarkus-reactive-msg)
 
 ## MQ
 
@@ -242,8 +242,3 @@ This is the implementation of [the MQ developer tutorial](https://developer.ibm.
 ![](https://developer.ibm.com/messaging/wp-content/uploads/sites/18/2018/08/LearnMQbadgeDiag1.png)
 
 Code to subscribe to topic, and put, get from Queue. It includes a Docker image with MQ embbedded [more explanation here.](mqChallenge/README.md)
-
-## Developing with VSCode and Redhat extension
-
-
-
