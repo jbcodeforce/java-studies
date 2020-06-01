@@ -11,9 +11,8 @@ Two way to implement the communication between services:
 
 ## Create a microprofile app
 
-Those notes support the different microprofile projects of:
+This section summarizes some getting started stuff on microprofile.
 
-* 
 ### With appsody
 
 Create a [open liberty microprofile 3.3](https://github.com/appsody/stacks/tree/master/incubator/java-openliberty) with appsody command: `appsody init java-microprofile`, which downloads the java microprofile code template with "health, liveness and metrics and a hello world API".
@@ -141,7 +140,9 @@ of verification procedures. Multiple domain-specific health checks can easily be
         }
     ```
 
-    @Liveness annotation is used to assess if the microservice is running
+The `@Liveness` annotation is used to assess if the microservice is running.
+
+The `@Readiness` annotation indicates that this particular bean is a readiness health check procedure. By pairing this annotation with the ApplicationScoped context from the Contexts and Dependency Injections API, the bean is discovered automatically when the `http://<>/health` endpoint receives a request
 
 * **Metrics** delivers details about the microservices runtime behavior by providing a unified way for MicroProfile servers to export monitoring data to management agents. Metrics also provides a common Java API for exposing their telemetry data. Metrics serves to pinpoint issues, providing long-term trend data for capacity planning, and pro-active discovery of issues (e.g. disk usage growing without bounds) via a simple to use RESTful API. Metrics can also help scheduling-systems decide when to scale the application to run on more or fewer machines.
 
@@ -158,6 +159,11 @@ of verification procedures. Multiple domain-specific health checks can easily be
         return Response.ok()… build();
     }
     ```
+
+The `@Timed` annotation tracks how frequently the method is invoked and how long it takes for each invocation of the method to complete. The `@Counted` annotation to a method to count how many times the matching URL is accessed monotonically, which is counting up sequentially.
+The `@Gauge` annotation to a method helps to track the number of items that are in the returned collection.
+
+In OpenLiberty the quickStartSecurity and keyStore configuration elements provide basic security to secure the server. When you visit the /metrics endpoint, use the credentials defined in the server configuration to log in and view the data.
 
 * **Open API** specification provides a set of Java interfaces and programming models that allow developers to natively produce OpenAPI v3 documents. Use JAX-RS anotations with OpenAPI annotations or start from a yml file.
 

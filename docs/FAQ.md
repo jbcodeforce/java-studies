@@ -1,5 +1,12 @@
 # FAQ
 
+## Get UUID
+
+```java
+    UUID uuid = UUID.randomUUID();
+    order.setOrderID(uuid.toString());
+```
+
 ## Java SE
 
 ### Read from a properties file
@@ -44,4 +51,17 @@ public class StartupListener {
                         @Destroyed(ApplicationScoped.class) ServletContext context) {
         // Perform action during application's shutdown
     }
+```
+
+### Unit test when there is CDI
+
+Add a constructor with the injectable bean as parameter:
+
+```java
+	@Inject
+	private OrderRepository repository;
+
+	public OrderService(OrderRepository repository) {
+		this.repository = repository;
+	}
 ```
