@@ -1,4 +1,0 @@
-JVMSHRC155E Error copying username into cache name
-JVMSHRC686I Failed to startup shared class cache. Continue without using it as -Xshareclasses:nonfatal is specified
-Launching mqweb (WebSphere Application Server 19.0.0.12/wlp-1.0.35.cl191220191120-0300) on IBM J9 VM, version 8.0.6.5 - pxa6480sr6fp5ifix-20200228_01(SR6 FP5+IJ23014) (en_US)
-[AUDIT   ] CWWKE0001I: The server mqweb has been launched.
