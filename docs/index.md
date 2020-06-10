@@ -1,5 +1,14 @@
 # Some Java studies
 
+## sdkman.io
+
+[sdkman](https://sdkman.io/) a tool for managing parallel versions of multiple Software Development Kits like java.
+
+```shell
+# update a project to set environment to create a .sdkmanrc file
+sdk env init
+```
+
 ## Maven
 
 Update maven cli: download it from http://maven.apache.org/download.cgi, unzip to ~/Tools. modify $PATH.
@@ -242,3 +251,9 @@ This is the implementation of [the MQ developer tutorial](https://developer.ibm.
 ![](https://developer.ibm.com/messaging/wp-content/uploads/sites/18/2018/08/LearnMQbadgeDiag1.png)
 
 Code to subscribe to topic, and put, get from Queue. It includes a Docker image with MQ embbedded [more explanation here.](mqChallenge/README.md)
+
+## TestContainer for integration test
+
+[junit based Test containers](https://www.testcontainers.org/) and a simple [quickstart](https://www.testcontainers.org/quickstart/junit_5_quickstart/).
+
+Projects where I used it: [JMSMQClient](./mqChallenge/JMSMQClient)

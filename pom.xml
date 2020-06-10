@@ -4,7 +4,7 @@
   <parent>
         <groupId>net.wasdev.wlp.maven.parent</groupId>
         <artifactId>liberty-maven-app-parent</artifactId>
-        <version>RELEASE</version>
+        <version>LATEST</version>
    </parent>
   <groupId>jbcodeforce</groupId>
   <artifactId>Java-studies</artifactId>

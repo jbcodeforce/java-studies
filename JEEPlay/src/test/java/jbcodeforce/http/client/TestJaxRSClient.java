@@ -61,6 +61,6 @@ public class TestJaxRSClient {
             public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
             public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
            }
-        }
+        };
     }
 }

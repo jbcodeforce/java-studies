@@ -1,0 +1,281 @@
+06/04/20 21:01:58 - Process(64.1) User(mqm) Program(crtmqm)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:01:58.506Z)
+                    CommentInsert1(Linux 4.19.76-linuxkit (MQ Linux (x86-64 platform) 64-bit))
+                    CommentInsert2(/opt/mqm (Installation1))
+                    CommentInsert3(9.1.5.0 (p915-ifix-L200325.DE))
+                   
+AMQ6287I: IBM MQ V9.1.5.0 (p915-ifix-L200325.DE).
+
+EXPLANATION:
+IBM MQ system information: 
+Host Info         :- Linux 4.19.76-linuxkit (MQ Linux (x86-64 platform) 64-bit)
+
+Installation      :- /opt/mqm (Installation1) 
+Version           :- 9.1.5.0 (p915-ifix-L200325.DE)
+ACTION:
+None.
+----- amqxeida.c : 6457 -------------------------------------------------------
+06/04/20 21:01:58 - Process(64.1) User(mqm) Program(crtmqm)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:01:58.503Z)
+                    CommentInsert3(QM1)
+                   
+AMQ8001I: IBM MQ queue manager created.
+
+EXPLANATION:
+IBM MQ queue manager QM1 created.
+ACTION:
+None.
+----- amqzsly0.c : 2508 -------------------------------------------------------
+06/04/20 21:01:58 - Process(171.1) User(mqm) Program(amqzxma0)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:01:58.808Z)
+                    ArithInsert1(36) ArithInsert2(5)
+                    CommentInsert1(bind())
+                    CommentInsert2(/mnt/mqm/data/sockets/QM10000/@qmgr/spipe/3a2a239d9bbd/zxc.health)
+                   
+AMQ6119S: An internal IBM MQ error has occurred (bind())
+
+EXPLANATION:
+MQ detected an unexpected error when calling the operating system. The MQ error
+recording routine has been called.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 842 --------------------------------------------------------
+06/04/20 21:01:58 - Process(171.1) User(mqm) Program(amqzxma0)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:01:58.816Z)
+                    ArithInsert1(171)
+                    CommentInsert1(QM1)
+                   
+AMQ6184W: An internal IBM MQ error has occurred on queue manager QM1.
+
+EXPLANATION:
+An error has been detected, and the IBM MQ error recording routine has been
+called. The failing process is process 171.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 888 --------------------------------------------------------
+06/04/20 21:02:00 - Process(171.1) User(mqm) Program(amqzxma0)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:02:00.023Z)
+                   
+AMQ6119S: An internal IBM MQ error has occurred ()
+
+EXPLANATION:
+MQ detected an unexpected error when calling the operating system. The MQ error
+recording routine has been called.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 842 --------------------------------------------------------
+06/04/20 21:02:00 - Process(171.1) User(mqm) Program(amqzxma0)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:02:00.028Z)
+                    ArithInsert1(171)
+                    CommentInsert1(QM1)
+                   
+AMQ6184W: An internal IBM MQ error has occurred on queue manager QM1.
+
+EXPLANATION:
+An error has been detected, and the IBM MQ error recording routine has been
+called. The failing process is process 171.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 888 --------------------------------------------------------
+06/04/20 21:02:42 - Process(106.1) User(mqm) Program(amqzxma0)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:02:42.300Z)
+                    ArithInsert1(36) ArithInsert2(4)
+                    CommentInsert1(bind())
+                    CommentInsert2(/mnt/mqm/data/sockets/QM10000/@qmgr/spipe/3a2a239d9bbd/zxc.health)
+                   
+AMQ6119S: An internal IBM MQ error has occurred (bind())
+
+EXPLANATION:
+MQ detected an unexpected error when calling the operating system. The MQ error
+recording routine has been called.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 842 --------------------------------------------------------
+06/04/20 21:02:42 - Process(106.1) User(mqm) Program(amqzxma0)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:02:42.310Z)
+                    ArithInsert1(106)
+                    CommentInsert1(QM1)
+                   
+AMQ6184W: An internal IBM MQ error has occurred on queue manager QM1.
+
+EXPLANATION:
+An error has been detected, and the IBM MQ error recording routine has been
+called. The failing process is process 106.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 888 --------------------------------------------------------
+06/04/20 21:02:43 - Process(106.1) User(mqm) Program(amqzxma0)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:02:43.744Z)
+                   
+AMQ6119S: An internal IBM MQ error has occurred ()
+
+EXPLANATION:
+MQ detected an unexpected error when calling the operating system. The MQ error
+recording routine has been called.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 842 --------------------------------------------------------
+06/04/20 21:02:43 - Process(106.1) User(mqm) Program(amqzxma0)
+                    Host(3a2a239d9bbd) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:02:43.753Z)
+                    ArithInsert1(106)
+                    CommentInsert1(QM1)
+                   
+AMQ6184W: An internal IBM MQ error has occurred on queue manager QM1.
+
+EXPLANATION:
+An error has been detected, and the IBM MQ error recording routine has been
+called. The failing process is process 106.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 888 --------------------------------------------------------
+06/04/20 21:04:17 - Process(104.1) User(mqm) Program(amqzxma0)
+                    Host(929fbb841d36) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:04:17.179Z)
+                    ArithInsert1(36) ArithInsert2(4)
+                    CommentInsert1(bind())
+                    CommentInsert2(/mnt/mqm/data/sockets/QM10000/@qmgr/spipe/929fbb841d36/zxc.health)
+                   
+AMQ6119S: An internal IBM MQ error has occurred (bind())
+
+EXPLANATION:
+MQ detected an unexpected error when calling the operating system. The MQ error
+recording routine has been called.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 842 --------------------------------------------------------
+06/04/20 21:04:17 - Process(104.1) User(mqm) Program(amqzxma0)
+                    Host(929fbb841d36) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:04:17.188Z)
+                    ArithInsert1(104)
+                    CommentInsert1(QM1)
+                   
+AMQ6184W: An internal IBM MQ error has occurred on queue manager QM1.
+
+EXPLANATION:
+An error has been detected, and the IBM MQ error recording routine has been
+called. The failing process is process 104.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 888 --------------------------------------------------------
+06/04/20 21:04:18 - Process(104.1) User(mqm) Program(amqzxma0)
+                    Host(929fbb841d36) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:04:18.624Z)
+                   
+AMQ6119S: An internal IBM MQ error has occurred ()
+
+EXPLANATION:
+MQ detected an unexpected error when calling the operating system. The MQ error
+recording routine has been called.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 842 --------------------------------------------------------
+06/04/20 21:04:18 - Process(104.1) User(mqm) Program(amqzxma0)
+                    Host(929fbb841d36) Installation(Installation1)
+                    VRMF(9.1.5.0)
+                    Time(2020-06-04T21:04:18.633Z)
+                    ArithInsert1(104)
+                    CommentInsert1(QM1)
+                   
+AMQ6184W: An internal IBM MQ error has occurred on queue manager QM1.
+
+EXPLANATION:
+An error has been detected, and the IBM MQ error recording routine has been
+called. The failing process is process 104.
+ACTION:
+Use the standard facilities supplied with your system to record the problem
+identifier and to save any generated output files. Use either the MQ Support
+site: http://www.ibm.com/software/integration/wmq/support/, or IBM Support
+Assistant (ISA): http://www.ibm.com/software/support/isa/, to see whether a
+solution is already available.  If you are unable to find a match, contact your
+IBM support center.  Do not discard these files until the problem has been
+resolved.
+----- amqxfdcx.c : 888 --------------------------------------------------------

@@ -1,0 +1,11 @@
+********************************************************************************
+product = WebSphere Application Server 19.0.0.12 (wlp-1.0.35.cl191220191120-0300)
+wlp.install.dir = /opt/mqm/web/
+server.config.dir = /mnt/mqm/data/web/installations/Installation1/servers/mqweb/
+java.home = /opt/mqm/java/jre64/jre
+java.version = 1.8.0_241
+java.runtime = Java(TM) SE Runtime Environment (8.0.6.5 - pxa6480sr6fp5ifix-20200228_01(SR6 FP5+IJ23014))
+os = Linux (4.19.76-linuxkit; amd64) (en_US)
+process = 162@172.19.0.2
+********************************************************************************
+[6/4/20 21:04:18:480 GMT] 00000001 com.ibm.ws.kernel.launch.internal.FrameworkManager           A CWWKE0001I: The server mqweb has been launched.

@@ -32,3 +32,14 @@ pallette and access to per to preview a file like a csv.
 ## Error
 
 * `Failed to launch debuggee in terminal. Reason: Failed to launch debuggee in terminal. Reason: java.util.concurrent.TimeoutException: timeout`: this was done by unknonw localhost resolution due to some DNS setting on mac.
+
+## Quarkus support
+
+Create a new projet: shift -> cmd -> P:  `Quarkus: Generate a Maven project `
+Start debugger:  shift -> cmd -> P: `Quarkus:  Debug current Quarkus Project` to create a configuration.
+
+Add code for a resource: Add a java file and use `qrc` in editor.
+
+To add an extension to current project: shift -> cmd -> P: `Quarkus:add an extension to current project`.
+
+In the outline view, we can get a tree view for application.properties

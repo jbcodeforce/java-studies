@@ -1,0 +1,26 @@
+version: '3'
+services:
+    ibmmq:
+        image: ibmcom/mq
+        container_name: mqserver
+        ports:
+            - '1414:1414'
+            - '9443:9443'
+            - '9157:9157'
+        volumes:
+            - qm1data:/mnt/mqm
+        stdin_open: true
+        tty: true
+        restart: always
+        environment:
+            LICENSE: accept
+            MQ_QMGR_NAME: QM1
+            MQ_APP_PASSWORD: admin
+            MQ_ENABLE_METRICS: "true"
+volumes:
+    qm1data:
+        
+networks:
+    default:
+        external:
+            name: labnet

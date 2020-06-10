@@ -9,4 +9,6 @@ microprofile30/service-b/target/
 microprofile30/appsody-code/target/
 mqChallenge/TicketReseller/build/
 mqChallenge/target/
+mqChallenge/qm1data/
+mqChallenge/qm1data/
 KafkaPlay/src/main/liberty/config/resources/security/certs.jks
