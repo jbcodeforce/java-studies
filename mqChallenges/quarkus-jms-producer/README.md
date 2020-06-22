@@ -1,12 +1,12 @@
 # Quarkus based inventory producer with REST end point project
 
-This project uses [Quarkus](https://quarkus.io/) and JMS client wiht MQ configuration. It generates inventory item message to update an inventory backend.
+This project uses [Quarkus](https://quarkus.io/) and JMS client with MQ configuration. It generates inventory item message to update an inventory backend. 
 
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
 
-```
+```shell
 ./mvnw quarkus:dev -Ddebug=5006
 ```
 
@@ -34,6 +34,7 @@ And then in the POST operation, specify the JSON to control the demo:
 
 ## Anatomy
 
+The `domain` folder defines the Inventory Message to publish and the Control DTO. The [MessageResource](https://github.com/jbcodeforce/java-studies/blob/master/mqChallenges/quarkus-jms-producer/src/main/java/ibm/gse/eda/mq/start/MessageResource.java) exposes the `/mqdemo/start` end point. The service implementing the MQ message production is in [InventoryMessageProducer](https://github.com/jbcodeforce/java-studies/blob/master/mqChallenges/quarkus-jms-producer/src/main/java/ibm/gse/eda/mq/start/infrastructure/mq/InventoryMessageProducer.java). This class is the only one interesting in this app as it illustrate injection of the mq properties, the creation of the JMSFactory at the constructor level, as this class is a singleton. A JMS context, and a producer are created at each simulation call for producing n messages.
 
 ## Packaging and running the application
 
