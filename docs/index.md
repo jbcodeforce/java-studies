@@ -91,6 +91,23 @@ Then in the plugins section add the execution stanza to specify when to run the 
 [Profile](http://maven.apache.org/guides/introduction/introduction-to-profiles.html) helps to use different configuration for different environment. They modify the POM at build time, and are meant to be used in complementary sets to give equivalent-but-different parameters for a set of target environments.
 Profiles can be explicitly specified using the `-P profilename`, or in the activeProfiles in the settings.xml file.
 
+### Using maven with docker
+
+Typical dockerfile
+
+```dockerfile
+FROM maven:3.6.3-jdk13
+COPY pom.xml workspace/
+COPY src workspace/src/
+WORKDIR /workspace
+CMD [ "mvn" "compile" "quarkus:dev" ]
+```
+
+Run and reuse existing m2 to avoid downloading each time
+
+```shell
+docker run -ti --network kafkanet -p 8080:8080 -v ~/.m2:/root/.m2 tmp-builder
+```
 
 ## Algo play 
 
@@ -243,7 +260,7 @@ See [this dedicated studies](https://jbcodeforce.github.io/kafka-studies/) for h
 
 ## Reactive messaging
 
-See the extensive doc from [SmallRye](https://smallrye.io/smallrye-reactive-messaging/) and the code under [kafka studies - quarkus-reactive-msg](https://github.com/jbcodeforce/kafka-studies/tree/master/quarkus-reactive-msg)
+See the extensive doc from [SmallRye](https://smallrye.io/smallrye-reactive-messaging/) and the code under [quarkus-reactive-msg]()
 
 ## MQ
 

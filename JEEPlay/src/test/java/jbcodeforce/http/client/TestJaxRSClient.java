@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 
 import java.io.StringReader;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.json.Json;
