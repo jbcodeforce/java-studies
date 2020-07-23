@@ -12,3 +12,4 @@ mqChallenges/quarkus-jms-consumer/target/
 mqChallenges/quarkus-jms-producer/target/
 mqChallenges/qm1data/
 KafkaPlay/src/main/liberty/config/resources/security/certs.jks
+reactive/target/

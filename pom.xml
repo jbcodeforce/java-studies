@@ -70,5 +70,6 @@
     <module>JEEPlay</module>
     <module>mqChallenge</module>
     <module>KafkaPlay</module>
+    <module>reactive</module>
   </modules>
 </project>

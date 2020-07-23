@@ -21,7 +21,7 @@ Run with automatic compilation `./mvnw compile quarkus:dev`.
 
 Can be packaged using `./mvnw clean package` or `./mvnw clean package -Pnative`
 
-Start and overtide properties at runtime:
+Start and override properties at runtime:
 
 `java -Dquarkus.datasource.password=youshallnotpass -jar target/myapp-runner.jar`
 
@@ -98,7 +98,7 @@ Things to do:
 
 ## Configuration
 
-application.properties content is injected with code like:
+`application.properties` content is injected with code like:
 
 ```java
     @ConfigProperty(name="temperature.threshold", defaultValue="2.5")
@@ -107,6 +107,8 @@ application.properties content is injected with code like:
 
 !!! Attention the field needs to be public, and then in test you need to access via getter!!
 DefaultValue does not work neither.
+
+Quarkus does much of its configuration and bootstrap at build time. But some properties are defined at run time from system properties, environment variables (in uppercase, . transformed as _ : QUARKUS_DATASOURCE_PASSWORD), using `.env` file, and then `application.property` in a `$(pwd)/target/config` folder for development test.
 
 ```java
 // does fail as it return -
@@ -117,9 +119,20 @@ DefaultValue does not work neither.
 
 The content can be combined with environment variables See [this section in quarkus guide](https://quarkus.io/guides/config#combining-property-expressions-and-environment-variables)
 
+Also you can access the configuration programmatically. It can be handy to achieve dynamic lookup, or retrieve configured values from classes that are neither CDI beans or JAX-RS resources. See [this paragraph](https://quarkus.io/guides/config#programmatically-access-the-configuration)
+
+```java
+String databaseName = ConfigProvider.getConfig().getValue("database.name", String.class);
+Optional<String> maybeDatabaseName = ConfigProvider.getConfig().getOptionalValue("database.name", String.class);
+```
+
+Quarkus supports the notion of configuration profiles. These allow you to have multiple configuration in the same file and select between them via a profile name.
+
+See also [Using Property Expressions](https://quarkus.io/guides/config#using-property-expressions)
+
 ## Reactive messaging
 
-The tutorial is [here](https://quarkus.io/guides/kafka)
+For a quick review of the reactive messaging with quarkus tutorial is [here](https://quarkus.io/guides/kafka)
 
 Quick summary:
 
@@ -132,6 +145,11 @@ TBC
 
 ## Adopting Vertx
 
-Quarkus is based on Vert.x, and almost all network-related features rely on Vert.x.
+Quarkus is based on Vert.x, and almost all network-related features rely on Vert.x. 
+
+### Vert.x body of knowledge
+
+* [baeldung Vertx](https://www.baeldung.com/vertx)
+* [Quarkus using Eclipse Vert.x](https://quarkus.io/guides/vertx)
 
 
