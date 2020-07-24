@@ -8,7 +8,7 @@ import rx.Single;
  * 
  *
  */
-public class FirstApp 
+public class RxJavaFirstApp 
 {
     public static void main(String[] args) {
         Single<String> single = Observable.just("Hello RxJava")

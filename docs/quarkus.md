@@ -66,11 +66,10 @@ Useful capabilities:
 * Use API over HTTP in the JSON format: `./mvnw quarkus:add-extension -Dextensions="resteasy-jsonb"`.
 * **Openapi** and swagger-ui `./mvnw quarkus:add-extension -Dextensions="quarkus-smallrye-openapi"`. Also to get the swagger-ui visible in "production" set `quarkus.swagger-ui.always-include=true` in the application.properties.
 * **Kafka** client: `./mvnw quarkus:add-extension -Dextensions="kafka"`
+
 * **Kubernetes** to get the deployment yaml file generated
 * Deploy to **Openshift** using source to image `./mvnw quarkus:add-extension -Dextensions="openshift"`.  See guide [QUARKUS - DEPLOYING ON OPENSHIFT](https://quarkus.io/guides/deploying-to-openshift)
 * `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
-
-For example `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
 
 ## Quarkus testing
 
@@ -145,7 +144,7 @@ TBC
 
 ## Adopting Vertx
 
-Quarkus is based on Vert.x, and almost all network-related features rely on Vert.x. 
+Quarkus is based on Vert.x, and almost all network-related features rely on Vert.x / Netty. 
 
 ### Vert.x body of knowledge
 

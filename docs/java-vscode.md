@@ -2,9 +2,9 @@
 
 ## Some Editor tricks
 
-The access to the command pallette shift -> cmd -> P
+The access to the command palette shift -> cmd -> P
 
-pallette and access to per to preview a file like a csv.
+palette and access to preview a file like a csv.
 
 ### Autocompletion
 
@@ -22,16 +22,27 @@ pallette and access to per to preview a file like a csv.
 ## VSCode tricks
 
 * Control the file exposed (like removing eclipse related file) -> code -> Preferences -> Settings -> your-existing-projectname -> Commonly used, file exclude and then enter a pattern like (`**/.classpath`)
-* Java Depenencies view helps to get the code of the used dependencies
+* Java Dependencies view helps to get the code of the used dependencies
 * Run maven goals from the maven projects view in the Explorer
 
 ## Debugging
 
 [Codelens debugging](https://code.visualstudio.com/docs/java/java-debugging)
 
+## Set environment variables
+
+select Debug > Open Configurations then you should see a set of launch configurations for debugging your code. You can then add to it an env property with a dictionary of string:string.
+
+```
+            "env": {
+                "BOOTSTRAP_SERVERS": "localhost:9092",
+                "TOPIC_NAME": "orders"
+            }
+```
+
 ## Error
 
-* `Failed to launch debuggee in terminal. Reason: Failed to launch debuggee in terminal. Reason: java.util.concurrent.TimeoutException: timeout`: this was done by unknonw localhost resolution due to some DNS setting on mac.
+* `Failed to launch debugger in terminal. Reason: Failed to launch debuggee in terminal. Reason: java.util.concurrent.TimeoutException: timeout`: this was done by unknown localhost resolution due to some DNS setting on mac.
 
 ## Quarkus support
 
