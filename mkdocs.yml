@@ -4,7 +4,8 @@ nav:
   - Introduction: index.md
   - Microprofile 3.x: microprofile.md
   - Open Liberty: openliberty.md
-  - quarkus: quarkus.md
+  - Quarkus: quarkus.md
+  - Vert.x: vertx.md
   - Concurrency : concurrent.md
   - MQ challenge: mqChallenge.md
   - Java FAQ: FAQ.md

@@ -24,19 +24,42 @@ Properties props = new Properties();
 
 ### How to read json file
 
+Use google parser.
+
 ```java
 FileReader input= new FileReader("src/test/resources/testpumps.json");
 Gson parser = new Gson();
 AssetEvent[] assets = parser.fromJson(new JsonReader(input), AssetEvent[].class);
 ```
 
+Use jackson
+
 ### Json binding JSR 367
 
-[Introduction from Baeldung](https://www.baeldung.com/java-json-binding-api)
+JSR 367 is the API for JSON processing, and implemented with JSON-B. The maven with quarkus is
+
+```
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-jsonb</artifactId>
+    </dependency>
+```
+
+The main [API features](https://www.baeldung.com/java-json-binding-api#api-features)
+
+Example of sending a java object as json string with rest-assured:
+
+```java
+Jsonb jsonb = JsonbBuilder.create();
+
+given()
+    .contentType(ContentType.JSON)
+    .body(jsonb.toJson(order)).post(url).then();
+```
 
 ## JAXRS
 
-### Get startup and destroy event:
+### Get startup and destroy event
 
 ```java
 @ApplicationScoped

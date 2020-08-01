@@ -1,8 +1,15 @@
-# Quarkus
+# Quarkus Summary and trick
 
-Best source of knowledge is [the guides](https://quarkus.io/guides/)
+Best source of knowledge is [reading the guides](https://quarkus.io/guides/) and the [workshop](https://quarkus.io/quarkus-workshops/)
 
-Some quick summary:
+## Value propositions
+
+* Designed to run java for microservice in container and OpenShift: reduce start time to microseconds. 
+* Run native in linux based image, so most of the java processing is done at build time.
+* Extensible components, Quarkus implements reactive programming with Vert.x
+
+
+Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Vert.x and Netty). All the HTTP requests your application receives, are handled by event loops (IO Thread) and then are routed towards the code that manages the request.
 
 ## Create a project
 
@@ -19,7 +26,7 @@ cd app-name
 
 Run with automatic compilation `./mvnw compile quarkus:dev`.
 
-Can be packaged using `./mvnw clean package` or `./mvnw clean package -Pnative`
+Can be packaged using `./mvnw clean package` or `./mvnw clean package -Pnative` for native execution.
 
 Start and override properties at runtime:
 
@@ -29,11 +36,39 @@ for a native executable: `./target/myapp-runner -Dquarkus.datasource.password=yo
 
 Can also use environment variables: Environment variables names are following the [conversion rules of Eclipse MicroProfile](https://github.com/eclipse/microprofile-config/blob/master/spec/src/main/asciidoc/configsources.asciidoc#default-configsources).
 
+### Other Maven quarkus cli
+
+[See Maven tooling guide](https://quarkus.io/guides/maven-tooling)
+
+```shell
+# create a project
+mvn io.quarkus:quarkus-maven-plugin:1.6.1.Final:create 
+# getting extension
+./mvnw quarkus:list-extensions
+# Build native executable
+./mvnw package -Pnative
+# Run integration tests on native app
+./mvnw verify -Pnative
+```
+
+For running quarkus app on OpenShift while developing locally:
+
+* Add in application.properties
+
+ ```properties
+ quarkus.package.type=mutable-jar 
+ quarkus.live-reload.password=changeit 
+ ```
+* set the environment variable QUARKUS_LAUNCH_DEVMODE=true
+* start with `./mvnw quarkus:remote-dev -Dquarkus.live-reload.url=http://my-remote-host:8080`
+
+This is done via a HTTP based long polling transport, that will synchronize your local workspace and the remote application via HTTP calls.
+
 ### Docker build
 
-`./mvnw clean package -Dquarkus.container-image.build=true` and push it to repository: `./mvnw clean package -Dquarkus.container-image.push=true`
+`./mvnw clean package -Dnative -Dquarkus.container-image.build=true` and push it to repository: `./mvnw clean package -Dquarkus.container-image.push=true`
 
-To avoid downloading all the maven jars while using multistage dockerfile and to keep the current executable started with quarkus:dev running on the same network as other dependant component, use a simple docker file for development that has java and maven:
+To avoid downloading all the maven jars while using multistage dockerfile and to keep the current executable started with quarkus:dev running on the same network as other dependent components, use a simple docker file for development that has java and maven:
 
 ```dockerfile
 FROM maven:3.6.3-jdk-11
@@ -57,6 +92,9 @@ docker run --rm -p 8080:8080 -ti --network kafkanet -v ~/.m2:/root/.m2 tmp-build
 
 For native build see [QUARKUS - TIPS FOR WRITING NATIVE APPLICATIONS](https://quarkus.io/guides/writing-native-applications-tips)
 
+```
+```
+
 ## Add capabilities
 
 Useful capabilities:
@@ -70,6 +108,7 @@ Useful capabilities:
 * **Kubernetes** to get the deployment yaml file generated
 * Deploy to **Openshift** using source to image `./mvnw quarkus:add-extension -Dextensions="openshift"`.  See guide [QUARKUS - DEPLOYING ON OPENSHIFT](https://quarkus.io/guides/deploying-to-openshift)
 * `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
+* **vert.x**: `./mvnw quarkus:add-extension -Dextensions="vertx"`
 
 ## Quarkus testing
 
@@ -80,7 +119,7 @@ Things to do:
 * in the test class add @QuarkusTest
 * inject the bean under test
 * be sure to use the good version of maven-surefire
-* set the java.util.logging system property to make sure tests will use the correct logmanager: 
+* set the java.util.logging system property to make sure tests will use the correct log manager:
 
 ```xml
 <systemPropertyVariables>
@@ -88,8 +127,9 @@ Things to do:
 </systemPropertyVariables>
 ```
 
-* Tunning tests are on port 8081 (can be changed via `quarkus.http.test-port=8083`)
-* 
+* Tuning tests are on port 8081 (can be changed via `quarkus.http.test-port=8083`)
+
+Integration test uses [Rest-assured](http://rest-assured.io/) with [API doc](https://github.com/rest-assured/rest-assured/wiki/Usage).
 
 ## Generate configuration for the application
 
@@ -129,9 +169,49 @@ Quarkus supports the notion of configuration profiles. These allow you to have m
 
 See also [Using Property Expressions](https://quarkus.io/guides/config#using-property-expressions)
 
+## Reactive with Mutiny
+
+[Mutiny](https://smallrye.io/smallrye-mutiny/) is a reactive programming library to offer a more guided API than traditional reactive framework and API. It supports asynchrony, non-blocking programming and streams, events, back-pressure and data flows.
+
+Add the resteasy mutiny package.
+
+```xml
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-mutiny</artifactId>
+        </dependency>
+```
+
+* To asynchronously handle HTTP requests, the endpoint method must return a java.util.concurrent.CompletionStage or an `io.smallrye.mutiny.Uni` (requires the quarkus-resteasy-mutiny extension).
+
+With Mutiny both Uni and Multi expose event-driven APIs: you express what you want to do upon a given event (success, failure, etc.). These APIs are divided into groups (types of operations) to make it more expressive and avoid having 100s of methods attached to a single class.
+
+
+```java
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/json/{id}")
+  // producing generic json object
+  public Uni<JsonObject> getJsonObject(@PathParam String id){
+        JsonObject order = new JsonObject("{\"name\": \"hello you\", \"id\": \"" + id + "\"}");
+        return Uni.createFrom().item( order);
+    }
+
+    \\ Producing a bean
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/order/{id}")
+    public Uni<Order> getOrderById(@PathParam String id){
+        Order o = new Order();
+        o.deliveryLocation="Paris/France";
+        o.id=id;
+        return Uni.createFrom().item(o);
+    }
+```
+
 ## Reactive messaging
 
-For a quick review of the reactive messaging with quarkus tutorial is [here](https://quarkus.io/guides/kafka)
+For a quick review of the reactive messaging with Quarkus tutorial is [here](https://quarkus.io/guides/kafka)
 
 Quick summary:
 
@@ -144,11 +224,26 @@ TBC
 
 ## Adopting Vertx
 
-Quarkus is based on Vert.x, and almost all network-related features rely on Vert.x / Netty. 
+Quarkus is based on Vert.x, and almost all network-related features rely on Vert.x / Netty. Every IO interaction passes through the non-blocking and reactive Vert.x engine. The (Vert.x) HTTP server receives the request and then routes it to the application. If the request targets a JAX-RS resource, the routing layer invokes the resource method in a worker thread and writes the response when the data is available. But if the HTTP request targets a reactive (non-blocking) route, the routing layer invokes the route on the IO thread giving lots of benefits such as higher concurrency and performance.
 
-### Vert.x body of knowledge
+ ![1](https://quarkus.io/guides/images/http-reactive-sequence.png)
 
-* [baeldung Vertx](https://www.baeldung.com/vertx)
-* [Quarkus using Eclipse Vert.x](https://quarkus.io/guides/vertx)
+To fully benefit from this model, the application code should be written in a non-blocking manner.
 
+Add the extension: `./mvnw quarkus:add-extension -Dextensions="vertx"`. Get access to Vert.x via injection: 
 
+```java
+@Inject Vertx vertx;
+```
+
+When using the Mutiny API to program in reactive approach, then the Vert.x package is `io.vertx.mutiny.core.Vertx`.
+
+## Typical problems
+
+### Run quarkus test with external components started with docker compose
+
+THe best approach is to avoid using docker-compose for development and use TestContainer. 
+
+### Cheat-Sheet
+
+*[Official](https://lordofthejars.github.io/quarkus-cheat-sheet/)
