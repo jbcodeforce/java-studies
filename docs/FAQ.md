@@ -24,7 +24,8 @@ Properties props = new Properties();
 
 ### How to read json file
 
-Use google parser.
+Using google parser. For the [maven dependency](https://mvnrepository.com/artifact/com.google.code.gson/gson)
+
 
 ```java
 FileReader input= new FileReader("src/test/resources/testpumps.json");
@@ -32,7 +33,14 @@ Gson parser = new Gson();
 AssetEvent[] assets = parser.fromJson(new JsonReader(input), AssetEvent[].class);
 ```
 
-Use jackson
+Using jsonb (quarkus)
+
+```java
+Book book = new Book("Java 11", LocalDate.now(), 1, false, "Duke", new BigDecimal(44.444));
+Jsonb jsonb = JsonbBuilder.create();
+String resultJson = jsonb.toJson(book);
+Book serializedBook = jsonb.fromJson(resultJson, Book.class);
+```
 
 ### Json binding JSR 367
 

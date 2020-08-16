@@ -7,6 +7,9 @@
 ```shell
 # update a project to set environment to create a .sdkmanrc file
 sdk env init
+# list existing java
+sdk list java
+sdk use java 11.0.8.j9-adpt
 ```
 
 ## Maven
@@ -35,7 +38,7 @@ By building the project through the aggregator POM, each project that has packag
 
 By setting packaging to pom type, we're declaring that project will serve as a parent or an aggregator for other sub module project. A module element is added to the parent project.
 
-When running `mvn package` command in the parent project directory, Maven will build and test all the dependant modules. To bypass integration test: `mvn install -DskipITs`
+When running `mvn package` command in the parent project directory, Maven will build and test all the dependent modules. To bypass integration test: `mvn install -DskipITs`
 
 !!! note
 		Recall that maven `profile` helps to define specific environments for maven execution. It is useful, to set some different runtime properties. Useful for testing and production packaging.
@@ -43,7 +46,7 @@ When running `mvn package` command in the parent project directory, Maven will b
 
 ### Maven building jars with dependency
 
-First you need to declare to use the assembly plugin, in the 
+First you need to declare to use the assembly plugin
 
 ```xml
 <build>
@@ -85,6 +88,16 @@ Then in the plugins section add the execution stanza to specify when to run the 
         </executions>
       </plugin>
 ```
+
+There is a better alternate is to use [maven shade](https://maven.apache.org/plugins/maven-shade-plugin/) plugin to build a fat or uber jar. 
+
+### maven exec
+
+`mvn  exec:java -Dexec.mainClass=`
+
+`mvn exec:java -Dexec.mainClass="jb.Main" -Dexec.args="arg0 arg1 arg2"`
+
+Get the available parameters: `mvn exec:help -Ddetail=true -Dgoal=java  `
 
 ### Maven profiles
 

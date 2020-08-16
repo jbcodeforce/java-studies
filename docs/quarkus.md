@@ -4,7 +4,7 @@ Best source of knowledge is [reading the guides](https://quarkus.io/guides/) and
 
 ## Value propositions
 
-* Designed to run java for microservice in container and OpenShift: reduce start time to microseconds. 
+* Designed to run java for microservice in container and OpenShift: reduce start time to microseconds, and reduce memory footprint.
 * Run native in linux based image, so most of the java processing is done at build time.
 * Extensible components, Quarkus implements reactive programming with Vert.x
 
@@ -14,7 +14,7 @@ Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Ver
 ## Create a project
 
 ```shell
-mvn io.quarkus:quarkus-maven-plugin:1.5.2.Final:create \
+mvn io.quarkus:quarkus-maven-plugin:1.7.0.Final:create \
     -DprojectGroupId=ibm.gse.eda \
     -DprojectArtifactId=app-name \
     -DclassName="ibm.gse.eda.GreetingResource" \
@@ -26,7 +26,8 @@ cd app-name
 
 Run with automatic compilation `./mvnw compile quarkus:dev`.
 
-Can be packaged using `./mvnw clean package` or `./mvnw clean package -Pnative` for native execution.
+Can be packaged using `./mvnw clean package` or `./mvnw clean package -Pnative` for native execution, you need a Graalvm installed locally, or use the command: `./mvnw package -Pnative -Dquarkus.native.container-build=true` to build with a docker build image. 
+For native build see [QUARKUS - TIPS FOR WRITING NATIVE APPLICATIONS](https://quarkus.io/guides/writing-native-applications-tips)
 
 Start and override properties at runtime:
 
@@ -35,6 +36,11 @@ Start and override properties at runtime:
 for a native executable: `./target/myapp-runner -Dquarkus.datasource.password=youshallnotpass`
 
 Can also use environment variables: Environment variables names are following the [conversion rules of Eclipse MicroProfile](https://github.com/eclipse/microprofile-config/blob/master/spec/src/main/asciidoc/configsources.asciidoc#default-configsources).
+
+### Debug within VSCode
+
+Start debugger:  shift -> cmd -> P: `Quarkus:  Debug current Quarkus Project` to create a configuration.
+
 
 ### Other Maven quarkus cli
 
@@ -59,6 +65,7 @@ For running quarkus app on OpenShift while developing locally:
  quarkus.package.type=mutable-jar 
  quarkus.live-reload.password=changeit 
  ```
+
 * set the environment variable QUARKUS_LAUNCH_DEVMODE=true
 * start with `./mvnw quarkus:remote-dev -Dquarkus.live-reload.url=http://my-remote-host:8080`
 
@@ -86,13 +93,6 @@ And then start it, this way:
 ```shell
 docker build -f Dockerfile-dev -t tmp-builder .
 docker run --rm -p 8080:8080 -ti --network kafkanet -v ~/.m2:/root/.m2 tmp-builder
-```
-
-### Native Build
-
-For native build see [QUARKUS - TIPS FOR WRITING NATIVE APPLICATIONS](https://quarkus.io/guides/writing-native-applications-tips)
-
-```
 ```
 
 ## Add capabilities
@@ -169,6 +169,18 @@ Quarkus supports the notion of configuration profiles. These allow you to have m
 
 See also [Using Property Expressions](https://quarkus.io/guides/config#using-property-expressions)
 
+## Code how to
+
+### Get access to start and stop application events
+
+```java
+import javax.enterprise.event.Observes;
+...
+ void onStart(@Observes StartupEvent ev){}
+
+ void onStop(@Observes ShutdownEvent ev) { }
+```
+
 ## Reactive with Mutiny
 
 [Mutiny](https://smallrye.io/smallrye-mutiny/) is a reactive programming library to offer a more guided API than traditional reactive framework and API. It supports asynchrony, non-blocking programming and streams, events, back-pressure and data flows.
@@ -182,10 +194,13 @@ Add the resteasy mutiny package.
         </dependency>
 ```
 
-* To asynchronously handle HTTP requests, the endpoint method must return a java.util.concurrent.CompletionStage or an `io.smallrye.mutiny.Uni` (requires the quarkus-resteasy-mutiny extension).
+* To asynchronously handle HTTP requests, the endpoint method must return a java.util.concurrent.CompletionStage or an `io.smallrye.mutiny.Uni`  or `io.smallrye.mutiny.Multi`(requires the quarkus-resteasy-mutiny extension).
 
 With Mutiny both Uni and Multi expose event-driven APIs: you express what you want to do upon a given event (success, failure, etc.). These APIs are divided into groups (types of operations) to make it more expressive and avoid having 100s of methods attached to a single class.
 
+[This section of the product documentation](https://smallrye.io/smallrye-mutiny/#_uni_and_multi) goes over some examples on how to use Uni/ Multi.
+
+Some examples:
 
 ```java
     @GET
@@ -209,6 +224,7 @@ With Mutiny both Uni and Multi expose event-driven APIs: you express what you wa
     }
 ```
 
+
 ## Reactive messaging
 
 For a quick review of the reactive messaging with Quarkus tutorial is [here](https://quarkus.io/guides/kafka)
@@ -217,8 +233,11 @@ Quick summary:
 
 * define an application scoped bean
 * using @Incoming and @Outcoming annotation with channel name
-* define channel properties in application properties.
+* define channel properties in `application.properties`.
 * Implement Deserializer using Jsonb. See [this section](https://quarkus.io/guides/kafka#serializing-via-json-b).
+
+Nice [chear sheet](https://lordofthejars.github.io/quarkus-cheat-sheet/#_reactive_messaging) to combine Munity, reative messaging.
+
 
 TBC
 
@@ -242,8 +261,12 @@ When using the Mutiny API to program in reactive approach, then the Vert.x packa
 
 ### Run quarkus test with external components started with docker compose
 
-THe best approach is to avoid using docker-compose for development and use TestContainer. 
+The best approach is to avoid using docker-compose for development and use TestContainer. 
 
 ### Cheat-Sheet
 
-*[Official](https://lordofthejars.github.io/quarkus-cheat-sheet/)
+* [Official](https://lordofthejars.github.io/quarkus-cheat-sheet/)
+
+### To read
+
+* [Reactive Programming with Quarkus - postgresql reactive with mutiny](https://medium.com/@hantsy/building-reactive-apis-with-quarkus-86bb12523da1)
