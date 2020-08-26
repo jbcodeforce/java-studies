@@ -57,25 +57,26 @@ mvn io.quarkus:quarkus-maven-plugin:1.6.1.Final:create
 ./mvnw verify -Pnative
 ```
 
-For running quarkus app on OpenShift while developing locally:
+## Add capabilities
 
-* Add in application.properties
+Useful capabilities:
 
- ```properties
- quarkus.package.type=mutable-jar 
- quarkus.live-reload.password=changeit 
- ```
+* **Heath** for liveness and readiness: `./mvnw quarkus:add-extension -Dextensions="smallrye-health"`
+* **Metrics** for application monitoring: `./mvnw quarkus:add-extension -Dextensions="smallrye-metrics"`
+* Use API over HTTP in the JSON format: `./mvnw quarkus:add-extension -Dextensions="resteasy-jsonb"`.
+* **Openapi** and swagger-ui `./mvnw quarkus:add-extension -Dextensions="quarkus-smallrye-openapi"`. Also to get the swagger-ui visible in "production" set `quarkus.swagger-ui.always-include=true` in the application.properties.
+* **Kafka** client: `./mvnw quarkus:add-extension -Dextensions="kafka"`
 
-* set the environment variable QUARKUS_LAUNCH_DEVMODE=true
-* start with `./mvnw quarkus:remote-dev -Dquarkus.live-reload.url=http://my-remote-host:8080`
-
-This is done via a HTTP based long polling transport, that will synchronize your local workspace and the remote application via HTTP calls.
+* **Kubernetes** to get the deployment yaml file generated
+* Deploy to **Openshift** using source to image `./mvnw quarkus:add-extension -Dextensions="openshift"`.  See guide [QUARKUS - DEPLOYING ON OPENSHIFT](https://quarkus.io/guides/deploying-to-openshift)
+* `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
+* **vert.x**: `./mvnw quarkus:add-extension -Dextensions="vertx"`
 
 ### Docker build
 
 `./mvnw clean package -Dnative -Dquarkus.container-image.build=true` and push it to repository: `./mvnw clean package -Dquarkus.container-image.push=true`
 
-To avoid downloading all the maven jars while using multistage dockerfile and to keep the current executable started with quarkus:dev running on the same network as other dependent components, use a simple docker file for development that has java and maven:
+To avoid downloading all the maven jars while using multistage dockerfile and to keep the current executable started with `quarkus:dev` running on the same network as other dependent components, use a simple docker file for development that has java and maven:
 
 ```dockerfile
 FROM maven:3.6.3-jdk-11
@@ -95,24 +96,64 @@ docker build -f Dockerfile-dev -t tmp-builder .
 docker run --rm -p 8080:8080 -ti --network kafkanet -v ~/.m2:/root/.m2 tmp-builder
 ```
 
-## Add capabilities
+We can also combine this into a docker-compose [file like in the item-aggregator](https://github.com/jbcodeforce/eda-kconnect-lab/blob/master/item-aggregator/docker-compose-dev.yaml) project.
 
-Useful capabilities:
+```yaml
+  maven:
+    image: maven
+    volumes:
+      - "./:/app"
+      - "~/.m2:/root/.m2"
+    depends_on:
+      - kafka
+    hostname: aggregator
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - QUARKUS_KAFKA_STREAMS_BOOTSTRAP_SERVERS=kafka:9092
+      - QUARKUS_PROFILE=dev
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    working_dir: /app
+    command: "mvn quarkus:dev"
+```
 
-* **Heath** for liveness and readiness: `./mvnw quarkus:add-extension -Dextensions="smallrye-health"`
-* **Metrics** for application monitoring: `./mvnw quarkus:add-extension -Dextensions="smallrye-metrics"`
-* Use API over HTTP in the JSON format: `./mvnw quarkus:add-extension -Dextensions="resteasy-jsonb"`.
-* **Openapi** and swagger-ui `./mvnw quarkus:add-extension -Dextensions="quarkus-smallrye-openapi"`. Also to get the swagger-ui visible in "production" set `quarkus.swagger-ui.always-include=true` in the application.properties.
-* **Kafka** client: `./mvnw quarkus:add-extension -Dextensions="kafka"`
 
-* **Kubernetes** to get the deployment yaml file generated
-* Deploy to **Openshift** using source to image `./mvnw quarkus:add-extension -Dextensions="openshift"`.  See guide [QUARKUS - DEPLOYING ON OPENSHIFT](https://quarkus.io/guides/deploying-to-openshift)
-* `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
-* **vert.x**: `./mvnw quarkus:add-extension -Dextensions="vertx"`
+## Running on OpenShift
+
+The guide is [here](https://quarkus.io/guides/deploying-to-openshift) and the main points are:
+
+* The OpenShift extension is actually a wrapper extension that brings together the kubernetes and container-image-s2i extensions with sensible defaults so that it’s easier for the user to get started with Quarkus on OpenShift
+* Build is done by source 2 image binary build: `./mvnw clean package -Dquarkus.container-image.build=true`. The output of the build is an ImageStream that is configured to automatically trigger a deployment
+* Build and deployment are done with the command: `./mvnw clean package -Dquarkus.kubernetes.deploy=true` 
+* See [openshift options](https://quarkus.io/guides/deploying-to-kubernetes#openshift)
+* Add any config map, secrets, in a `openshift.yaml` under `src/main/kubernetes`. Any resource found will be added in the generated manifests. Global modifications (e.g. labels, annotations etc) will also be applied to those resources.
+
+```properties
+quarkus.openshift.expose=true
+quarkus.openshift.env-vars.my-env-var.secret=my-secret
+```
+
+To change the value of a specific property in the application properties, we can use environment variables: The convention is to convert the name of the property to uppercase and replace every dot (.) with an underscore (_). So define a config map to define those environment variables in `src/main/kubernetes` folder.
+
+For running Quarkus app on OpenShift while developing locally so change done on code, pom, properties are sent to the remote quarkus use the following settings:
+
+* Add in application.properties:
+
+ ```properties
+ quarkus.package.type=mutable-jar
+ quarkus.live-reload.password=changeit
+
+ ```
+
+* set the environment variable QUARKUS_LAUNCH_DEVMODE=true
+* start with `./mvnw quarkus:remote-dev -Dquarkus.live-reload.url=http://my-remote-host:8080`
+
+This is done via a HTTP based long polling transport, that will synchronize your local workspace and the remote application via HTTP calls.
 
 ## Quarkus testing
 
-Quarkus uses juni5, and QuarkusTest to access to CDI and other quarkus goodies. See [the test guide here](https://quarkus.io/guides/getting-started-testing). To test via HTTP, we can use rest-assured.
+Quarkus uses junit 5, and QuarkusTest to access to CDI and other quarkus goodies. See [the test guide here](https://quarkus.io/guides/getting-started-testing). To test via HTTP, we can use rest-assured.
 
 Things to do:
 
@@ -269,4 +310,5 @@ The best approach is to avoid using docker-compose for development and use TestC
 
 ### To read
 
+* [Using Kubernetes ConfigMaps to define your Quarkus application’s properties](https://developers.redhat.com/blog/2020/01/23/using-kubernetes-configmaps-to-define-your-quarkus-applications-properties/)
 * [Reactive Programming with Quarkus - postgresql reactive with mutiny](https://medium.com/@hantsy/building-reactive-apis-with-quarkus-86bb12523da1)

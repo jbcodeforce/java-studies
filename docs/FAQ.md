@@ -65,6 +65,24 @@ given()
     .body(jsonb.toJson(order)).post(url).then();
 ```
 
+### Kafka stream and json-b serdes
+
+How to use a pojo as value in the stream? use the io.quarkus.kafka.client.serialization.JsonbSerde class.
+
+```java
+import io.quarkus.kafka.client.serialization.JsonbSerde;
+
+JsonbSerde<WeatherStation> weatherStationSerde = new JsonbSerde<>(
+                WeatherStation.class);
+JsonbSerde<Aggregation> aggregationSerde = new JsonbSerde<>(Aggregation.class);
+
+// then use the serdes...
+GlobalKTable<Integer, WeatherStation> stations = builder.globalTable( 
+                WEATHER_STATIONS_TOPIC,
+                Consumed.with(Serdes.Integer(), weatherStationSerde));
+
+```
+
 ## JAXRS
 
 ### Get startup and destroy event
