@@ -1,5 +1,12 @@
 # FAQ
 
+## List current JDK installed
+
+```
+/usr/libexec/java_home -V
+```
+
+
 ## Get UUID
 
 ```java

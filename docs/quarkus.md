@@ -6,7 +6,9 @@ Best source of knowledge is [reading the guides](https://quarkus.io/guides/) and
 
 * Designed to run java for microservice in container and OpenShift: reduce start time to microseconds, and reduce memory footprint.
 * Run native in linux based image, so most of the java processing is done at build time.
-* Extensible components, Quarkus implements reactive programming with Vert.x
+* Extensible components, very easy to add dependencies and hide plumbing code
+* Easy to develop integration tests at API level
+* Quarkus implements reactive programming with Vert.x
 
 
 Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Vert.x and Netty). All the HTTP requests your application receives, are handled by event loops (IO Thread) and then are routed towards the code that manages the request.
@@ -14,7 +16,7 @@ Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Ver
 ## Create a project
 
 ```shell
-mvn io.quarkus:quarkus-maven-plugin:1.7.0.Final:create \
+mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create \
     -DprojectGroupId=ibm.gse.eda \
     -DprojectArtifactId=app-name \
     -DclassName="ibm.gse.eda.GreetingResource" \
@@ -27,6 +29,7 @@ cd app-name
 Run with automatic compilation `./mvnw compile quarkus:dev`.
 
 Can be packaged using `./mvnw clean package` or `./mvnw clean package -Pnative` for native execution, you need a Graalvm installed locally, or use the command: `./mvnw package -Pnative -Dquarkus.native.container-build=true` to build with a docker build image. 
+
 For native build see [QUARKUS - TIPS FOR WRITING NATIVE APPLICATIONS](https://quarkus.io/guides/writing-native-applications-tips)
 
 Start and override properties at runtime:
@@ -35,6 +38,16 @@ Start and override properties at runtime:
 
 for a native executable: `./target/myapp-runner -Dquarkus.datasource.password=youshallnotpass`
 
+See the [Building a native executable](https://quarkus.io/guides/building-native-image) guide to develop with graalvm:
+
+* Use [Mandrel] for java 11+ app, for linux OS
+* Use Graalvm community edition for development JDK 1.8 Apps.
+* Install native image with: `${GRAALVM_HOME}/bin/gu install native-image`
+* `./mvnw clean package -Pnative` for native execution
+* To generate debug symbols, add `-Dquarkus.native.debug.enabled=true` flag when generating the native executable.
+* run the tests against a native executable that has already been built: `./mvnw test-compile failsafe:integration-test` 
+* The following command will create a linux executable container without graalvm installed: `./mvnw package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true`
+* 
 Can also use environment variables: Environment variables names are following the [conversion rules of Eclipse MicroProfile](https://github.com/eclipse/microprofile-config/blob/master/spec/src/main/asciidoc/configsources.asciidoc#default-configsources).
 
 ### Debug within VSCode
@@ -42,13 +55,13 @@ Can also use environment variables: Environment variables names are following th
 Start debugger:  shift -> cmd -> P: `Quarkus:  Debug current Quarkus Project` to create a configuration.
 
 
-### Other Maven quarkus cli
+### Other Maven Quarkus CLI
 
 [See Maven tooling guide](https://quarkus.io/guides/maven-tooling)
 
 ```shell
 # create a project
-mvn io.quarkus:quarkus-maven-plugin:1.6.1.Final:create 
+mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create 
 # getting extension
 ./mvnw quarkus:list-extensions
 # Build native executable
@@ -68,9 +81,10 @@ Useful capabilities:
 * **Kafka** client: `./mvnw quarkus:add-extension -Dextensions="kafka"`
 
 * **Kubernetes** to get the deployment yaml file generated
-* Deploy to **Openshift** using source to image `./mvnw quarkus:add-extension -Dextensions="openshift"`.  See guide [QUARKUS - DEPLOYING ON OPENSHIFT](https://quarkus.io/guides/deploying-to-openshift)
+* Deploy to **OpenShift** using source to image `./mvnw quarkus:add-extension -Dextensions="openshift"`.  See guide [QUARKUS - DEPLOYING ON OPENSHIFT](https://quarkus.io/guides/deploying-to-openshift)
 * `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
 * **vert.x**: `./mvnw quarkus:add-extension -Dextensions="vertx"`
+* **kogito**:  `./mvnw quarkus:add-extension -Dextensions="kogito"`
 
 ### Docker build
 
@@ -125,16 +139,61 @@ The guide is [here](https://quarkus.io/guides/deploying-to-openshift) and the ma
 
 * The OpenShift extension is actually a wrapper extension that brings together the kubernetes and container-image-s2i extensions with sensible defaults so that it’s easier for the user to get started with Quarkus on OpenShift
 * Build is done by source 2 image binary build: `./mvnw clean package -Dquarkus.container-image.build=true`. The output of the build is an ImageStream that is configured to automatically trigger a deployment
-* Build and deployment are done with the command: `./mvnw clean package -Dquarkus.kubernetes.deploy=true` 
-* See [openshift options](https://quarkus.io/guides/deploying-to-kubernetes#openshift)
-* Add any config map, secrets, in a `openshift.yaml` under `src/main/kubernetes`. Any resource found will be added in the generated manifests. Global modifications (e.g. labels, annotations etc) will also be applied to those resources.
+* The first time, build and deployment are done with the command: `./mvnw clean package -Dquarkus.kubernetes.deploy=true`, after that, any build will trigger redeployment. Here are the steps done:
+    * Build thin jar
+    * Contact kubernetes API server
+    * Perform s2i binary build with jar on the server. This adds a BuildConfig on the connected project.
+    * Send source code from local folder to openshift build container.
+    * Write manifest and signatures 
+    * Generate dockerfile and build the image on server
+    * Push image to private registry
+    * Apply the manifests: service account, service, image stream, build config, and deployment config
+* Three pods are visible: build, deploy and running app.
+
+**Some customization needed**.
+
+* To expose a route add:
 
 ```properties
 quarkus.openshift.expose=true
-quarkus.openshift.env-vars.my-env-var.secret=my-secret
 ```
 
+* To add environment variables defined in a config map and injected in the properties do the following:
+
+    * Add a config map with the variable name in the data as key. It follows the environment variable naming convention to overwrite quarkus' property. The config map can have multiple variables.
+
+    ```yaml
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: message-cm
+    data:
+      GREETING_MESSAGE: salut
+    ```
+    
+    * Add properties to match the environment variables, and the reference to the config map. 
+
+    ```properties
+    greeting.message=bonjour
+    quarkus.openshift.env-vars.app-message.configmap=message-cm
+    ```
+
+   * Redeploy: `./mvnw clean package -Dquarkus.kubernetes.deploy=true`
+
+This will add the following declaration to the deploymentConfig:
+
+```yaml
+      envFrom:
+            - configMapRef:
+                name: message-cm
+```
+
+* See [OpenShift options](https://quarkus.io/guides/deploying-to-kubernetes#openshift)
+* Add any config map, secrets, in a `openshift.yaml` under `src/main/kubernetes`. Any resource found will be added in the generated manifests. Global modifications (e.g. labels, annotations etc) will also be applied to those resources.```
+
 To change the value of a specific property in the application properties, we can use environment variables: The convention is to convert the name of the property to uppercase and replace every dot (.) with an underscore (_). So define a config map to define those environment variables in `src/main/kubernetes` folder.
+
+### Remote dev mode
 
 For running Quarkus app on OpenShift while developing locally so change done on code, pom, properties are sent to the remote quarkus use the following settings:
 
@@ -174,7 +233,7 @@ Integration test uses [Rest-assured](http://rest-assured.io/) with [API doc](htt
 
 ## Generate configuration for the application
 
-`./mvnw quarkus:generate-config` 
+`./mvnw quarkus:generate-config`
 
 ## Configuration
 
@@ -184,9 +243,6 @@ Integration test uses [Rest-assured](http://rest-assured.io/) with [API doc](htt
     @ConfigProperty(name="temperature.threshold", defaultValue="2.5")
     public double temperatureThreshold;
 ```
-
-!!! Attention the field needs to be public, and then in test you need to access via getter!!
-DefaultValue does not work neither.
 
 Quarkus does much of its configuration and bootstrap at build time. But some properties are defined at run time from system properties, environment variables (in uppercase, . transformed as _ : QUARKUS_DATASOURCE_PASSWORD), using `.env` file, and then `application.property` in a `$(pwd)/target/config` folder for development test.
 
