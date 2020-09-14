@@ -16,7 +16,7 @@ Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Ver
 ## Create a project
 
 ```shell
-mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create \
+mvn io.quarkus:quarkus-maven-plugin:1.7.2.Final:create \
     -DprojectGroupId=ibm.gse.eda \
     -DprojectArtifactId=app-name \
     -DclassName="ibm.gse.eda.GreetingResource" \
@@ -81,9 +81,14 @@ Useful capabilities:
 * **Kafka** client: `./mvnw quarkus:add-extension -Dextensions="kafka"`
 
 * **Kubernetes** to get the deployment yaml file generated
+
+  ```
+  ./mvnw quarkus:add-extension -Dextensions="kubernetes,kubernetes-config"
+  ```
 * Deploy to **OpenShift** using source to image `./mvnw quarkus:add-extension -Dextensions="openshift"`.  See guide [QUARKUS - DEPLOYING ON OPENSHIFT](https://quarkus.io/guides/deploying-to-openshift)
 * `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
 * **vert.x**: `./mvnw quarkus:add-extension -Dextensions="vertx"`
+* **jib**: to do container image build. See [note here](https://quarkus.io/guides/container-image) `./mvnw quarkus:add-extension -Dextensions="container-image-jib"`
 * **kogito**:  `./mvnw quarkus:add-extension -Dextensions="kogito"`
 
 ### Docker build
@@ -137,7 +142,7 @@ We can also combine this into a docker-compose [file like in the item-aggregator
 
 The guide is [here](https://quarkus.io/guides/deploying-to-openshift) and the main points are:
 
-* The OpenShift extension is actually a wrapper extension that brings together the kubernetes and container-image-s2i extensions with sensible defaults so that it’s easier for the user to get started with Quarkus on OpenShift
+* The OpenShift extension is actually a wrapper extension that brings together the kubernetes and container-image-s2i extensions with defaults so that it’s easier for the user to get started with Quarkus on OpenShift
 * Build is done by source 2 image binary build: `./mvnw clean package -Dquarkus.container-image.build=true`. The output of the build is an ImageStream that is configured to automatically trigger a deployment
 * The first time, build and deployment are done with the command: `./mvnw clean package -Dquarkus.kubernetes.deploy=true`, after that, any build will trigger redeployment. Here are the steps done:
     * Build thin jar
@@ -147,7 +152,7 @@ The guide is [here](https://quarkus.io/guides/deploying-to-openshift) and the ma
     * Write manifest and signatures 
     * Generate dockerfile and build the image on server
     * Push image to private registry
-    * Apply the manifests: service account, service, image stream, build config, and deployment config
+    * Apply the manifests: service account, service, image stream, build config, and deployment config as defined by the generated `openshift.yaml`
 * Three pods are visible: build, deploy and running app.
 
 **Some customization needed**.
@@ -188,10 +193,13 @@ This will add the following declaration to the deploymentConfig:
                 name: message-cm
 ```
 
+* To add config map secret we need the kubernetes-config. [See this guide](https://quarkus.io/guides/kubernetes-config)
 * See [OpenShift options](https://quarkus.io/guides/deploying-to-kubernetes#openshift)
-* Add any config map, secrets, in a `openshift.yaml` under `src/main/kubernetes`. Any resource found will be added in the generated manifests. Global modifications (e.g. labels, annotations etc) will also be applied to those resources.```
+* Add any config map, secrets, in a `openshift.yaml` under `src/main/kubernetes`. Any resource found will be added in the generated manifests. Global modifications (e.g. labels, annotations etc) will also be applied to those resources.
 
 To change the value of a specific property in the application properties, we can use environment variables: The convention is to convert the name of the property to uppercase and replace every dot (.) with an underscore (_). So define a config map to define those environment variables in `src/main/kubernetes` folder.
+
+To delete a deployed app, remove the deployment config.
 
 ### Remote dev mode
 
