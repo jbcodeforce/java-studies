@@ -2,7 +2,15 @@
 
 Best source of knowledge is [reading the guides](https://quarkus.io/guides/) and the [workshop](https://quarkus.io/quarkus-workshops/)
 
-## Value propositions
+* [Value Propositions](#value-propositions)
+* [Getting Started](#getting-started)
+* [Quarkus maven CLI](#other-maven-quarkus-cli)
+* [Docker build](#docker-build)
+* [Running on OpenShift](#running-on-openshift)
+* [Testing with Quarkus](#testing-with-quarkus)
+* [Development practices](#development-practices)
+
+## Value Propositions
 
 * Designed to run java for microservice in container and OpenShift: reduce start time to microseconds, and reduce memory footprint.
 * Run native in linux based image, so most of the java processing is done at build time.
@@ -13,7 +21,9 @@ Best source of knowledge is [reading the guides](https://quarkus.io/guides/) and
 
 Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Vert.x and Netty). All the HTTP requests your application receives, are handled by event loops (IO Thread) and then are routed towards the code that manages the request.
 
-## Create a project
+## Getting Started
+
+### Create a project
 
 ```shell
 mvn io.quarkus:quarkus-maven-plugin:1.7.2.Final:create \
@@ -24,7 +34,9 @@ mvn io.quarkus:quarkus-maven-plugin:1.7.2.Final:create \
 cd app-name
 ```
 
-## Package & run
+Modify resource, service,... 
+
+### Package & run
 
 Run with automatic compilation `./mvnw compile quarkus:dev`.
 
@@ -40,14 +52,20 @@ for a native executable: `./target/myapp-runner -Dquarkus.datasource.password=yo
 
 See the [Building a native executable](https://quarkus.io/guides/building-native-image) guide to develop with graalvm:
 
-* Use [Mandrel] for java 11+ app, for linux OS
+* Use [Mandrel](https://developers.redhat.com/blog/2020/06/05/mandrel-a-community-distribution-of-graalvm-for-the-red-hat-build-of-quarkus/) for java 11+ app, for linux OS
 * Use Graalvm community edition for development JDK 1.8 Apps.
 * Install native image with: `${GRAALVM_HOME}/bin/gu install native-image`
 * `./mvnw clean package -Pnative` for native execution
 * To generate debug symbols, add `-Dquarkus.native.debug.enabled=true` flag when generating the native executable.
 * run the tests against a native executable that has already been built: `./mvnw test-compile failsafe:integration-test` 
 * The following command will create a linux executable container without graalvm installed: `./mvnw package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true`
-* 
+* Build native executable
+```
+./mvnw package -Pnative
+```
+* Build and deploy on OpenShift: add OpenShift plugin and do [these steps](#running-on-openshift).
+
+
 Can also use environment variables: Environment variables names are following the [conversion rules of Eclipse MicroProfile](https://github.com/eclipse/microprofile-config/blob/master/spec/src/main/asciidoc/configsources.asciidoc#default-configsources).
 
 ### Debug within VSCode
@@ -55,7 +73,7 @@ Can also use environment variables: Environment variables names are following th
 Start debugger:  shift -> cmd -> P: `Quarkus:  Debug current Quarkus Project` to create a configuration.
 
 
-### Other Maven Quarkus CLI
+## Other Maven Quarkus CLI
 
 [See Maven tooling guide](https://quarkus.io/guides/maven-tooling)
 
@@ -68,9 +86,11 @@ mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create
 ./mvnw package -Pnative
 # Run integration tests on native app
 ./mvnw verify -Pnative
+# Generate configuration for the application
+./mvnw quarkus:generate-config
 ```
 
-## Add capabilities
+### Add capabilities
 
 Useful capabilities:
 
@@ -89,13 +109,13 @@ Useful capabilities:
 * `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
 * **vert.x**: `./mvnw quarkus:add-extension -Dextensions="vertx"`
 * **jib**: to do container image build. See [note here](https://quarkus.io/guides/container-image) `./mvnw quarkus:add-extension -Dextensions="container-image-jib"`
-* **kogito**:  `./mvnw quarkus:add-extension -Dextensions="kogito"`
+* **[kogito](https://kogito.kie.org)**:  `./mvnw quarkus:add-extension -Dextensions="kogito"`
 
-### Docker build
+## Docker build
 
 `./mvnw clean package -Dnative -Dquarkus.container-image.build=true` and push it to repository: `./mvnw clean package -Dquarkus.container-image.push=true`
 
-To avoid downloading all the maven jars while using multistage dockerfile and to keep the current executable started with `quarkus:dev` running on the same network as other dependent components, use a simple docker file for development that has java and maven:
+To avoid downloading all the maven jars while using multistage Dockerfile and to keep the current executable started with `quarkus:dev` running on the same network as other dependent components, use a simple docker file for development that has java and maven:
 
 ```dockerfile
 FROM maven:3.6.3-jdk-11
@@ -148,14 +168,14 @@ The guide is [here](https://quarkus.io/guides/deploying-to-openshift) and the ma
     * Build thin jar
     * Contact kubernetes API server
     * Perform s2i binary build with jar on the server. This adds a BuildConfig on the connected project.
-    * Send source code from local folder to openshift build container.
+    * Send source code from local folder to OpenShift build container.
     * Write manifest and signatures 
     * Generate dockerfile and build the image on server
     * Push image to private registry
     * Apply the manifests: service account, service, image stream, build config, and deployment config as defined by the generated `openshift.yaml`
 * Three pods are visible: build, deploy and running app.
 
-**Some customization needed**.
+### Some customization needed
 
 * To expose a route add:
 
@@ -193,9 +213,43 @@ This will add the following declaration to the deploymentConfig:
                 name: message-cm
 ```
 
-* To add config map secret we need the kubernetes-config. [See this guide](https://quarkus.io/guides/kubernetes-config)
-* See [OpenShift options](https://quarkus.io/guides/deploying-to-kubernetes#openshift)
-* Add any config map, secrets, in a `openshift.yaml` under `src/main/kubernetes`. Any resource found will be added in the generated manifests. Global modifications (e.g. labels, annotations etc) will also be applied to those resources.
+* To add config map, secrets we need the kubernetes-config. [See this guide](https://quarkus.io/guides/kubernetes-config), then declare properties in certain formats:
+
+ ```properties
+  %prod.quarkus.openshift.env-vars.KAFKA_USER.value=sandbox-rp-tls-cred
+  %prod.quarkus.openshift.env-vars.SECURE_PROTOCOL.value=SSL
+  %dev.quarkus.openshift.env-vars.SECURE_PROTOCOL.value=SASL_SSL
+  quarkus.openshift.env-vars.KAFKA_PASSWORD.secret=sandbox-rp-tls-cred
+  quarkus.openshift.env-vars.KAFKA_PASSWORD.value=user.password
+  quarkus.openshift.mounts.es-cert.path=/deployments/certs/server
+  quarkus.openshift.secret-volumes.es-cert.secret-name=sandbox-rp-cluster-ca-cert
+ ```
+
+ That will generate the expected spec:
+ ```yaml
+     - name: KAFKA_USER
+      value: sandbox-rp-tls-cred
+    - name: SECURE_PROTOCOL
+      value: SSL
+    - name: KAFKA_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: user.password
+          name: sandbox-rp-tls-cred
+    volumeMounts:
+    - mountPath: /deployments/certs/server
+      name: es-cert
+      readOnly: false
+      subPath: ""
+  volumes:
+      - name: es-cert
+        secret:
+          defaultMode: 384
+          optional: false
+          secretName: sandbox-rp-cluster-ca-cert
+ ```
+
+ See [OpenShift options](https://quarkus.io/guides/deploying-to-kubernetes#openshift)
 
 To change the value of a specific property in the application properties, we can use environment variables: The convention is to convert the name of the property to uppercase and replace every dot (.) with an underscore (_). So define a config map to define those environment variables in `src/main/kubernetes` folder.
 
@@ -218,7 +272,7 @@ For running Quarkus app on OpenShift while developing locally so change done on 
 
 This is done via a HTTP based long polling transport, that will synchronize your local workspace and the remote application via HTTP calls.
 
-## Quarkus testing
+## Testing with Quarkus
 
 Quarkus uses junit 5, and QuarkusTest to access to CDI and other quarkus goodies. See [the test guide here](https://quarkus.io/guides/getting-started-testing). To test via HTTP, we can use rest-assured.
 
@@ -239,11 +293,11 @@ Things to do:
 
 Integration test uses [Rest-assured](http://rest-assured.io/) with [API doc](https://github.com/rest-assured/rest-assured/wiki/Usage).
 
-## Generate configuration for the application
 
-`./mvnw quarkus:generate-config`
 
-## Configuration
+## Development practices
+
+### Configuration
 
 `application.properties` content is injected with code like:
 
@@ -274,7 +328,6 @@ Quarkus supports the notion of configuration profiles. These allow you to have m
 
 See also [Using Property Expressions](https://quarkus.io/guides/config#using-property-expressions)
 
-## Code how to
 
 ### Get access to start and stop application events
 
@@ -286,11 +339,11 @@ import javax.enterprise.event.Observes;
  void onStop(@Observes ShutdownEvent ev) { }
 ```
 
-## Reactive with Mutiny
+### Reactive with Mutiny
 
 [Mutiny](https://smallrye.io/smallrye-mutiny/) is a reactive programming library to offer a more guided API than traditional reactive framework and API. It supports asynchrony, non-blocking programming and streams, events, back-pressure and data flows.
 
-Add the resteasy mutiny package.
+Add the `resteasy-mutiny` package.
 
 ```xml
         <dependency>
@@ -329,8 +382,20 @@ Some examples:
     }
 ```
 
+* Create a multi from a list and send to kafka
 
-## Reactive messaging
+```java
+ Multi.createFrom().items(buildItems(numberOfRecords).stream())
+                .subscribe().with( item -> {
+                    logger.warning("send " + item.toString());
+                    //KafkaRecord<String, Item> record = KafkaRecord.of(item.sku,item);
+                    CompletionStage<Void> acked = emitter.send(item);
+                    acked.toCompletableFuture().join();
+                    },
+                    failure -> System.out.println("Failed with " + failure.getMessage()));
+```
+
+### Reactive messaging
 
 For a quick review of the reactive messaging with Quarkus tutorial is [here](https://quarkus.io/guides/kafka)
 
@@ -339,12 +404,31 @@ Quick summary:
 * define an application scoped bean
 * using @Incoming and @Outcoming annotation with channel name
 * define channel properties in `application.properties`.
+* To use kafka connector specify: `mp.messaging.incoming.[channel-name].connector=smallrye-kafka`
+
 * Implement Deserializer using Jsonb. See [this section](https://quarkus.io/guides/kafka#serializing-via-json-b).
 
-Nice [chear sheet](https://lordofthejars.github.io/quarkus-cheat-sheet/#_reactive_messaging) to combine Munity, reative messaging.
+Nice [cheat sheet](https://lordofthejars.github.io/quarkus-cheat-sheet/#_reactive_messaging) to combine Munity, reative messaging.
 
+* It is possible to combine imperative and reactive: so on a POST api, emit events to kafka. We just need to inject an emitter.
 
-TBC
+```java
+  @Inject @Channel("items") Emitter<KafkaRecord<String, Item>> emitter;
+```
+Emitting Kafka Records will duplicate the payload.
+
+```json
+{"headers":{},
+"key":"Item_4",
+"metadata":{},"partition":-1,
+"payload":{"id":296,"price":72.9,"quantity":7,"sku":"Item_4","storeName":"Store_2"}}
+```
+
+To send directly the payload with a key use a Message. 
+
+[Apache kafka specific for reactive messaging](https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2/kafka/kafka.html)
+
+The Kafka Connector is based on the Vert.x Kafka Client.
 
 ## Adopting Vertx
 
