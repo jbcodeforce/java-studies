@@ -60,11 +60,13 @@ See the [Building a native executable](https://quarkus.io/guides/building-native
 * run the tests against a native executable that has already been built: `./mvnw test-compile failsafe:integration-test` 
 * The following command will create a linux executable container without graalvm installed: `./mvnw package -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true`
 * Build native executable
+
 ```
 ./mvnw package -Pnative
+./mvnw package -Pnative -DskipTests
 ```
-* Build and deploy on OpenShift: add OpenShift plugin and do [these steps](#running-on-openshift).
 
+* Build and deploy on OpenShift: add OpenShift plugin and do [these steps](#running-on-openshift).
 
 Can also use environment variables: Environment variables names are following the [conversion rules of Eclipse MicroProfile](https://github.com/eclipse/microprofile-config/blob/master/spec/src/main/asciidoc/configsources.asciidoc#default-configsources).
 
@@ -102,18 +104,23 @@ Useful capabilities:
 
 * **Kubernetes** to get the deployment yaml file generated
 
-  ```
-  ./mvnw quarkus:add-extension -Dextensions="kubernetes,kubernetes-config"
-  ```
+```shell
+./mvnw quarkus:add-extension -Dextensions="kubernetes,kubernetes-config"
+```
+
 * Deploy to **OpenShift** using source to image `./mvnw quarkus:add-extension -Dextensions="openshift"`.  See guide [QUARKUS - DEPLOYING ON OPENSHIFT](https://quarkus.io/guides/deploying-to-openshift)
 * `./mvnw quarkus:add-extension -Dextensions="container-image-docker"`
 * **vert.x**: `./mvnw quarkus:add-extension -Dextensions="vertx"`
 * **jib**: to do container image build. See [note here](https://quarkus.io/guides/container-image) `./mvnw quarkus:add-extension -Dextensions="container-image-jib"`
-* **[kogito](https://kogito.kie.org)**:  `./mvnw quarkus:add-extension -Dextensions="kogito"`
+* **[Kogito](https://kogito.kie.org)**:  `./mvnw quarkus:add-extension -Dextensions="kogito"`
 
 ## Docker build
 
-`./mvnw clean package -Dnative -Dquarkus.container-image.build=true` and push it to repository: `./mvnw clean package -Dquarkus.container-image.push=true`
+```shell
+./mvnw clean package -Dnative -Dquarkus.container-image.build=true
+# and push it to repository: 
+./mvnw clean package -Dquarkus.container-image.push=true
+```
 
 To avoid downloading all the maven jars while using multistage Dockerfile and to keep the current executable started with `quarkus:dev` running on the same network as other dependent components, use a simple docker file for development that has java and maven:
 
@@ -165,12 +172,13 @@ The guide is [here](https://quarkus.io/guides/deploying-to-openshift) and the ma
 * The OpenShift extension is actually a wrapper extension that brings together the kubernetes and container-image-s2i extensions with defaults so that it’s easier for the user to get started with Quarkus on OpenShift
 * Build is done by source 2 image binary build: `./mvnw clean package -Dquarkus.container-image.build=true`. The output of the build is an ImageStream that is configured to automatically trigger a deployment
 * The first time, build and deployment are done with the command: `./mvnw clean package -Dquarkus.kubernetes.deploy=true`, after that, any build will trigger redeployment. Here are the steps done:
+
     * Build thin jar
     * Contact kubernetes API server
     * Perform s2i binary build with jar on the server. This adds a BuildConfig on the connected project.
     * Send source code from local folder to OpenShift build container.
     * Write manifest and signatures 
-    * Generate dockerfile and build the image on server
+    * Generate Dockerfile and build the image on server
     * Push image to private registry
     * Apply the manifests: service account, service, image stream, build config, and deployment config as defined by the generated `openshift.yaml`
 * Three pods are visible: build, deploy and running app.
@@ -447,6 +455,12 @@ Add the extension: `./mvnw quarkus:add-extension -Dextensions="vertx"`. Get acce
 When using the Mutiny API to program in reactive approach, then the Vert.x package is `io.vertx.mutiny.core.Vertx`.
 
 ## Typical problems
+
+### Running cloud native 
+
+By default, when building a native executable, GraalVM will not include any of the resources that are on the classpath into the native executable it creates. Resources that are meant to be part of the native executable need to be configured explicitly.
+
+[See writing native app tips](https://quarkus.io/guides/writing-native-applications-tips)
 
 ### Run quarkus test with external components started with docker compose
 

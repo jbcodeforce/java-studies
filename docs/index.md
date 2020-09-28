@@ -273,7 +273,7 @@ See [this dedicated studies](https://jbcodeforce.github.io/kafka-studies/) for h
 
 ## Reactive messaging
 
-See the extensive doc from [SmallRye](https://smallrye.io/smallrye-reactive-messaging/) and the code under [quarkus-reactive-msg]()
+See the extensive doc from [SmallRye](https://smallrye.io/smallrye-reactive-messaging/) and my note [quarkus](#quarkus)
 
 ## MQ
 
@@ -287,3 +287,34 @@ Code to subscribe to topic, and put, get from Queue. It includes a Docker image 
 [junit based Test containers](https://www.testcontainers.org/) and a simple [quickstart](https://www.testcontainers.org/quickstart/junit_5_quickstart/).
 
 Projects where I used it: [JMSMQClient](./mqChallenge/JMSMQClient)
+
+## Rest Assured
+
+[REST Assured ](https://rest-assured.io/) is used to test REST services in java.
+
+Test a GET
+
+```java
+@Test public void
+lotto_resource_returns_200_with_expected_id_and_winners() {
+
+    when().
+            get("/lotto/{id}", 5).
+    then().
+            statusCode(200).
+            body("lotto.lottoId", equalTo(5),
+                 "lotto.winners.winnerId", hasItems(23, 54));
+
+}
+```
+
+Test a POST
+
+```java
+given()
+          .pathParam("numberRecords", 3)
+          .when().post("http://localhost:8080/start/{numberRecords}")
+          .then()
+             .statusCode(200)
+             .body(is("started"));
+```

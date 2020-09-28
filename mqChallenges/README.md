@@ -1,6 +1,4 @@
 
-See explanations in the [BOOK Format.]()
-
 # Publisher / Subscribe on MQ
 
 This is the implementation of [the MQ developer tutorial](https://developer.ibm.com/messaging/learn-mq/mq-tutorials/mq-dev-challenge/) and supports the implementation of the following solution:
