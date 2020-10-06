@@ -354,10 +354,10 @@ import javax.enterprise.event.Observes;
 Add the `resteasy-mutiny` package.
 
 ```xml
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-mutiny</artifactId>
-        </dependency>
+  <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-mutiny</artifactId>
+  </dependency>
 ```
 
 * To asynchronously handle HTTP requests, the endpoint method must return a java.util.concurrent.CompletionStage or an `io.smallrye.mutiny.Uni`  or `io.smallrye.mutiny.Multi`(requires the quarkus-resteasy-mutiny extension).
