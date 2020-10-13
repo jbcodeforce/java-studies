@@ -297,11 +297,17 @@ Things to do:
 </systemPropertyVariables>
 ```
 
-* Tuning tests are on port 8081 (can be changed via `quarkus.http.test-port=8083`)
+* Exposed port for tests are on port 8081 (can be changed via `quarkus.http.test-port=8083`)
 
 Integration test uses [Rest-assured](http://rest-assured.io/) with [API doc](https://github.com/rest-assured/rest-assured/wiki/Usage).
 
+For testing body content, use the [hamcrest APIs](http://hamcrest.org/JavaHamcrest/javadoc/1.3/org/hamcrest/CoreMatchers.html). Example of not and containsString operators.
 
+```java
+public void shouldNotHaveStore_7_fromGetStoreNames(){
+        given().when().get("/names").then().statusCode(200).body(not(containsString("Store_7")));
+    }
+```
 
 ## Development practices
 
