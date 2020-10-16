@@ -26,7 +26,7 @@ Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Ver
 ### Create a project
 
 ```shell
-mvn io.quarkus:quarkus-maven-plugin:1.7.2.Final:create \
+mvn io.quarkus:quarkus-maven-plugin:1.8.3.Final:create \
     -DprojectGroupId=ibm.gse.eda \
     -DprojectArtifactId=app-name \
     -DclassName="ibm.gse.eda.GreetingResource" \
@@ -309,6 +309,33 @@ public void shouldNotHaveStore_7_fromGetStoreNames(){
     }
 ```
 
+## Command mode application
+
+Develop [command mode applications](https://quarkus.io/guides/command-mode-reference) that run and then exit, like a java main method.
+
+For that implement QuarkusApplication and have Quarkus run this method automatically
+
+```java
+@QuarkusMain(name="JbMain")
+public class CommandModeApp implements QuarkusApplication {
+
+    @Override
+    public int run(String... args) throws Exception {
+        System.out.println("Hello from mars");
+        return 10;
+    }
+```
+
+Then `mvn package` and run it with `java -jar target/....-runner.jar`
+
+
+When running a command mode application the basic lifecycle is as follows:
+* Start Quarkus
+* Run the QuarkusApplication main method
+* Shut down Quarkus and exit the JVM after the main method returns
+
+
+
 ## Development practices
 
 ### Configuration
@@ -438,7 +465,7 @@ Emitting Kafka Records will duplicate the payload.
 "payload":{"id":296,"price":72.9,"quantity":7,"sku":"Item_4","storeName":"Store_2"}}
 ```
 
-To send directly the payload with a key use a Message. 
+To send directly the payload with a key use a Message.
 
 [Apache kafka specific for reactive messaging](https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2/kafka/kafka.html)
 
