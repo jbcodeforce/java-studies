@@ -18,7 +18,6 @@ Best source of knowledge is [reading the guides](https://quarkus.io/guides/) and
 * Easy to develop integration tests at API level
 * Quarkus implements reactive programming with Vert.x
 
-
 Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Vert.x and Netty). All the HTTP requests your application receives, are handled by event loops (IO Thread) and then are routed towards the code that manages the request.
 
 ## Getting Started
@@ -81,7 +80,7 @@ Start debugger:  shift -> cmd -> P: `Quarkus:  Debug current Quarkus Project` to
 
 ```shell
 # create a project
-mvn io.quarkus:quarkus-maven-plugin:1.7.1.Final:create 
+mvn io.quarkus:quarkus-maven-plugin:1.8.3.Final:create
 # getting extension
 ./mvnw quarkus:list-extensions
 # Build native executable
@@ -117,12 +116,13 @@ Useful capabilities:
 ## Docker build
 
 ```shell
-./mvnw clean package -Dnative -Dquarkus.container-image.build=true
+# image name will be the name of the project in pom. build only
+./mvnw clean package -Dnative -Dquarkus.container-image.build=true -Dquarkus.container-image.group=ibmcase -Dquarkus.container-image.tag=1.0.0
 # and push it to repository: 
-./mvnw clean package -Dquarkus.container-image.push=true
+./mvnw clean package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true
 ```
 
-To avoid downloading all the maven jars while using multistage Dockerfile and to keep the current executable started with `quarkus:dev` running on the same network as other dependent components, use a simple docker file for development that has java and maven:
+To avoid downloading all the maven jars while using a multistage Dockerfile and to keep the current executable started with `quarkus:dev` running on the same docker network as other dependent components, use a simple docker file for development that has java and maven:
 
 ```dockerfile
 FROM maven:3.6.3-jdk-11
@@ -135,7 +135,7 @@ WORKDIR /home
 CMD ["mvn", "compile", "quarkus:dev"]
 ```
 
-And then start it, this way:
+And then start it, by mounting the .m2 maven repository.
 
 ```shell
 docker build -f Dockerfile-dev -t tmp-builder .
@@ -282,7 +282,27 @@ This is done via a HTTP based long polling transport, that will synchronize your
 
 ## Testing with Quarkus
 
-Quarkus uses junit 5, and QuarkusTest to access to CDI and other quarkus goodies. See [the test guide here](https://quarkus.io/guides/getting-started-testing). To test via HTTP, we can use rest-assured.
+Quarkus uses junit 5, and QuarkusTest to access to CDI and other quarkus goodies. See [the test guide here](https://quarkus.io/guides/getting-started-testing). To test via HTTP, we can use rest-assured. 
+
+@QuarkusTest helps to get the CDI working. But there is still an issue on inject properties that may not be loaded due to proxy instance creation. So in test class the properties need to be accessed via getter:
+
+```Java 
+@ApplicationScoped
+public class RabbitMQItemGenerator {
+
+  @ConfigProperty(name = "amqp.host")
+  public String hostname;
+...
+
+@QuarkusTest
+public class TestRabbitGenerator {
+    
+    @Inject
+    RabbitMQItemGenerator generator;
+
+    ...
+    Assertions.assertNotNull(generator.getHost());
+```
 
 Things to do:
 

@@ -2,14 +2,20 @@
 
 ## sdkman.io
 
-[sdkman](https://sdkman.io/) a tool for managing parallel versions of multiple Software Development Kits like java.
+[sdkman](https://sdkman.io/) is a tool for managing parallel versions of multiple Software Development Kits like java.
 
 ```shell
 # update a project to set environment to create a .sdkmanrc file
 sdk env init
-# list existing java
+# list existing java installable version
 sdk list java
+
+# install a specific version
+sdk install java 8.0.265.hs-adpt 
 sdk use java 11.0.8.j9-adpt
+or
+sdk use java 8.0.265.hs-adpt
+# then do your maven project with older 1.8 compile.
 ```
 
 ## Maven
@@ -38,7 +44,9 @@ By building the project through the aggregator POM, each project that has packag
 
 By setting packaging to pom type, we're declaring that project will serve as a parent or an aggregator for other sub module project. A module element is added to the parent project.
 
-When running `mvn package` command in the parent project directory, Maven will build and test all the dependent modules. To bypass integration test: `mvn install -DskipITs`
+When running `mvn package` command in the parent project directory, Maven will build and test all the dependent modules. 
+
+To bypass integration test: `mvn install -DskipITs`
 
 !!! note
 		Recall that maven `profile` helps to define specific environments for maven execution. It is useful, to set some different runtime properties. Useful for testing and production packaging.
@@ -258,7 +266,7 @@ It provides few additional aspects:
 * Composability and readability
 * Data as a flow manipulated with a rich vocabulary of operators
 * Nothing happens until you subscribe
-* Backpressure or the ability for the consumer to signal the producer that the rate of emission is too high
+* Back pressure or the ability for the consumer to signal the producer that the rate of emission is too high
 * High level but high value abstraction that is concurrency-agnostic
 
 See the simplest examples of Flux code in src/test/main/jbcodeforce/react/ReactorSimpleTest.java. Then tests with the StepVerifier. StepVerifier wraps source of stream and express expectations about the next signals to occur. src/test/main/jbcodeforce/react/ReactorStepVerifier.java.
@@ -286,7 +294,17 @@ Code to subscribe to topic, and put, get from Queue. It includes a Docker image 
 
 [junit based Test containers](https://www.testcontainers.org/) and a simple [quickstart](https://www.testcontainers.org/quickstart/junit_5_quickstart/).
 
-Projects where I used it: [JMSMQClient](./mqChallenge/JMSMQClient)
+Projects where I used it: 
+
+* [JMSMQClient](./mqChallenge/JMSMQClient)
+* [Person manager with couchdb](https://github.com/jbcodeforce/person-manager)
+
+```
+@Container
+    public static GenericContainer container = new GenericContainer("couchdb").withExposedPorts(5984)
+            .withEnv("COUCHDB_USER", "admin").withEnv("COUCHDB_PASSWORD", "password");
+    public static  PersonRepository repo = new PersonRepository();
+```
 
 ## Rest Assured
 
