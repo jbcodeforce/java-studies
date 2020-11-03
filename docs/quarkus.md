@@ -10,6 +10,8 @@ Best source of knowledge is [reading the guides](https://quarkus.io/guides/) and
 * [Testing with Quarkus](#testing-with-quarkus)
 * [Development practices](#development-practices)
 
+Updated 11/3/2020
+
 ## Value Propositions
 
 * Designed to run java for microservice in container and OpenShift: reduce start time to microseconds, and reduce memory footprint.

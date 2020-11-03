@@ -299,7 +299,7 @@ Projects where I used it:
 * [JMSMQClient](./mqChallenge/JMSMQClient)
 * [Person manager with couchdb](https://github.com/jbcodeforce/person-manager)
 
-```
+```java
 @Container
     public static GenericContainer container = new GenericContainer("couchdb").withExposedPorts(5984)
             .withEnv("COUCHDB_USER", "admin").withEnv("COUCHDB_PASSWORD", "password");
