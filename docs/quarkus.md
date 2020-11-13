@@ -19,6 +19,9 @@ Updated 11/3/2020
 * Extensible components, very easy to add dependencies and hide plumbing code
 * Easy to develop integration tests at API level
 * Quarkus implements reactive programming with Vert.x
+* > 50% reduction in resources demand
+* No need to retrain Java developer to nodejs
+* Hot reload made developer flow faster: 20 microservices built per week.
 
 Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Vert.x and Netty). All the HTTP requests your application receives, are handled by event loops (IO Thread) and then are routed towards the code that manages the request.
 
@@ -285,6 +288,8 @@ This is done via a HTTP based long polling transport, that will synchronize your
 ## Testing with Quarkus
 
 Quarkus uses junit 5, and QuarkusTest to access to CDI and other quarkus goodies. See [the test guide here](https://quarkus.io/guides/getting-started-testing). To test via HTTP, we can use rest-assured. 
+
+Application configuration will be used in any active profile. The built-in profiles in Quarkus are: `dev, prod and test`. The `test` profile will be used every time you run the @QuarkusTest
 
 @QuarkusTest helps to get the CDI working. But there is still an issue on inject properties that may not be loaded due to proxy instance creation. So in test class the properties need to be accessed via getter:
 

@@ -49,6 +49,20 @@ String resultJson = jsonb.toJson(book);
 Book serializedBook = jsonb.fromJson(resultJson, Book.class);
 ```
 
+Using jackson to serialize an object to a String
+
+```java
+import com.fasterxml.jackson.databind.ObjectMapper;
+static ObjectMapper mapper = new ObjectMapper();
+ try {
+    this.order = mapper.writeValueAsString(order);
+} catch (JsonProcessingException e) {
+    e.printStackTrace();
+    this.order = "";
+}
+```
+
+
 ### Json binding JSR 367
 
 JSR 367 is the API for JSON processing, and implemented with JSON-B. The maven with quarkus is
