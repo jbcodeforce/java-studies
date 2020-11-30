@@ -85,7 +85,7 @@ Start debugger:  shift -> cmd -> P: `Quarkus:  Debug current Quarkus Project` to
 
 ```shell
 # create a project
-mvn io.quarkus:quarkus-maven-plugin:1.8.3.Final:create
+mvn io.quarkus:quarkus-maven-plugin:1.9.1.Final:create
 # getting extension
 ./mvnw quarkus:list-extensions
 # Build native executable
@@ -196,9 +196,9 @@ The guide is [here](https://quarkus.io/guides/deploying-to-openshift) and the ma
 quarkus.openshift.expose=true
 ```
 
-* To add environment variables defined in a config map and injected in the properties do the following:
+* To define environment variables, use config map:
 
-    * Add a config map with the variable name in the data as key. It follows the environment variable naming convention to overwrite quarkus' property. The config map can have multiple variables.
+    * Add a config map with the variable name in the data filed as key. It follows the environment variable naming convention to overwrite quarkus' property. The config map can have multiple variables.
 
     ```yaml
     apiVersion: v1
@@ -209,7 +209,7 @@ quarkus.openshift.expose=true
       GREETING_MESSAGE: salut
     ```
     
-    * Add properties to match the environment variables, and the reference to the config map. 
+    * To inject environment variables from config map add a property with the name of the config map.
 
     ```properties
     greeting.message=bonjour
@@ -328,7 +328,7 @@ Things to do:
 
 Integration test uses [Rest-assured](http://rest-assured.io/) with [API doc](https://github.com/rest-assured/rest-assured/wiki/Usage).
 
-For testing body content, use the [hamcrest APIs](http://hamcrest.org/JavaHamcrest/javadoc/1.3/org/hamcrest/CoreMatchers.html). Example of not and containsString operators.
+For testing body content, use the [Hamcrest APIs](http://hamcrest.org/JavaHamcrest/javadoc/1.3/org/hamcrest/CoreMatchers.html). Example of not and containsString operators.
 
 ```java
 public void shouldNotHaveStore_7_fromGetStoreNames(){
@@ -360,8 +360,6 @@ When running a command mode application the basic lifecycle is as follows:
 * Start Quarkus
 * Run the QuarkusApplication main method
 * Shut down Quarkus and exit the JVM after the main method returns
-
-
 
 ## Development practices
 
@@ -422,11 +420,11 @@ Add the `resteasy-mutiny` package.
 
 * To asynchronously handle HTTP requests, the endpoint method must return a java.util.concurrent.CompletionStage or an `io.smallrye.mutiny.Uni`  or `io.smallrye.mutiny.Multi`(requires the quarkus-resteasy-mutiny extension).
 
-With Mutiny both Uni and Multi expose event-driven APIs: you express what you want to do upon a given event (success, failure, etc.). These APIs are divided into groups (types of operations) to make it more expressive and avoid having 100s of methods attached to a single class.
+With Mutiny both `Uni` and `Multi` expose event-driven APIs: you express what you want to do upon a given event (success, failure, etc.). These APIs are divided into groups (types of operations) to make it more expressive and avoid having 100s of methods attached to a single class.
 
 [This section of the product documentation](https://smallrye.io/smallrye-mutiny/#_uni_and_multi) goes over some examples on how to use Uni/ Multi.
 
-Some examples:
+Here are some basic examples:
 
 ```java
     @GET
@@ -438,7 +436,7 @@ Some examples:
         return Uni.createFrom().item( order);
     }
 
-    \\ Producing a bean
+    // Producing a bean
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/order/{id}")
@@ -453,6 +451,10 @@ Some examples:
 * Create a multi from a list and send to kafka
 
 ```java
+  @Inject
+  @Channel("items")
+  Emitter<Item> emitter;
+ 
  Multi.createFrom().items(buildItems(numberOfRecords).stream())
                 .subscribe().with( item -> {
                     logger.warning("send " + item.toString());
@@ -461,6 +463,12 @@ Some examples:
                     acked.toCompletableFuture().join();
                     },
                     failure -> System.out.println("Failed with " + failure.getMessage()));
+```
+
+* Having a resource end point to do server-side events:
+
+```java
+
 ```
 
 ### Reactive messaging
@@ -516,7 +524,11 @@ When using the Mutiny API to program in reactive approach, then the Vert.x packa
 
 ## Typical problems
 
-### Running cloud native 
+### Examples
+
+* Quarkus with kafka and kubernetes deployment: []()
+
+### Running cloud native
 
 By default, when building a native executable, GraalVM will not include any of the resources that are on the classpath into the native executable it creates. Resources that are meant to be part of the native executable need to be configured explicitly.
 

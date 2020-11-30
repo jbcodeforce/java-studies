@@ -28,14 +28,14 @@ See all the [vert.x samples here](https://github.com/vert-x3/vertx-examples/tree
   * [Circuit breaker](#circuit-breaker)
   * [Kafka consumer and producer](#kafka-and-vertx)
 
-vertx has a CLI to run verticle, to bypass maven or gradle.
+vertx has a CLI to run verticle, to bypass maven or graddle.
 
 
 * Start a http server with vertx: `vertx run io.vertx.examples.openshift.MyHttpVerticle -cp target/clustered-application-http-3.9.0.jar `
 
 ## Event bus
 
-event bus is used by different verticles to communicate through asynchronous message passing  (JSON). 
+Event bus is used by different verticles to communicate through asynchronous message passing  (JSON). 
 
 A receiver on a point to point
 
@@ -137,7 +137,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
   public void start() throws Exception {
     // Get the kafka producer config
     JsonObject config = config();
-    // Create the producer
+    // Create the producer, ith key as string and value as jsonObject
     producer = KafkaWriteStream.create(vertx, config.getMap(), String.class, JsonObject.class);
     // get messages and write:
     producer.write(new ProducerRecord<>("the_topic", new JsonObject().put(key, payload)));
@@ -168,7 +168,7 @@ KafkaReadStream<String, JsonObject> consumer = KafkaReadStream.create(vertx, con
 
 ## Quarkus Vert.x reactive app
 
-Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Vert.x and Netty). All the HTTP requests your application receives are handled by event loops (IO Thread) and then are routed towards the code that manages the request. 
+Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Vert.x and Netty). All the HTTP requests, your application receives, are handled by event loops (IO Thread) and then are routed towards the code that manages the request. 
 Depending on the destination, it can invoke the code managing the request on a worker thread (Servlet, Jax-RS) or use the IO Thread (reactive route). Quarkus also integrates smoothly with the Vert.x event bus (to enable asynchronous messaging passing between application components) and some reactive clients.
 
 See [this guide to get started with quarkus and vert.x](https://quarkus.io/guides/vertx).
@@ -176,7 +176,7 @@ See [this guide to get started with quarkus and vert.x](https://quarkus.io/guide
 Use the following extensions: 
 
 ```shell
-mvn io.quarkus:quarkus-maven-plugin:1.6.1.Final:create \
+mvn io.quarkus:quarkus-maven-plugin:1.9.1.Final:create \
     -DprojectGroupId=jbcodeforce \
     -DprojectArtifactId=getting-started-reactive \
     -DclassName="jbcodeforce.gs.ReactiveGreetingResource" \
@@ -194,7 +194,7 @@ Get access to Vert.x via injection in any beans (different Vertx classes are ava
 @Inject io.vertx.mutiny.core.Vertx vertx;
 ```
 
-To asynchronously handle the HTTP request, the endpoint method must return a `java.util.concurrent.CompletionStage` or an `io.smallrye.mutiny.Uni`:
+To asynchronously handle the HTTP request, the endpoint method must return a `java.util.concurrent.CompletionStage` or an `io.smallrye.mutiny.Uni` or `Multi`:
 
 ```java
 @GET
@@ -212,7 +212,7 @@ You can deploy verticles in Quarkus. It supports:
 * bare verticle - Java classes extending `io.vertx.core.AbstractVerticle`
 * Mutiny verticle - Java classes extending `io.smallrye.mutiny.vertx.core.AbstractVerticle`
 
-Verticles are not bean, but adding @ApplicationScoped, can be used to access injection.
+Verticles are not beans, but adding @ApplicationScoped, can be used to access injection.
 
 Here is an example on how to deploy a verticle from another application scoped bean, when the application starts. 
 
