@@ -30,7 +30,7 @@ Quarkus HTTP support is based on a non-blocking and reactive engine (Eclipse Ver
 ### Create a project
 
 ```shell
-mvn io.quarkus:quarkus-maven-plugin:1.8.3.Final:create \
+mvn io.quarkus:quarkus-maven-plugin:1.10.3.Final:create \
     -DprojectGroupId=ibm.gse.eda \
     -DprojectArtifactId=app-name \
     -DclassName="ibm.gse.eda.GreetingResource" \
@@ -147,7 +147,7 @@ docker build -f Dockerfile-dev -t tmp-builder .
 docker run --rm -p 8080:8080 -ti --network kafkanet -v ~/.m2:/root/.m2 tmp-builder
 ```
 
-We can also combine this into a docker-compose [file like in the item-aggregator](https://github.com/jbcodeforce/eda-kconnect-lab/blob/master/item-aggregator/docker-compose-dev.yaml) project.
+We can also combine this into a docker-compose [file like in the eda item inventory](https://github.com/ibm-cloud-architecture/refarch-eda-item-inventory/blob/master/dev-docker-compose.yaml) project.
 
 ```yaml
   maven:
@@ -213,7 +213,7 @@ quarkus.openshift.expose=true
 
     ```properties
     greeting.message=bonjour
-    quarkus.openshift.env-vars.app-message.configmap=message-cm
+    quarkus.openshift.env.configmaps=message-cm
     ```
 
    * Redeploy: `./mvnw clean package -Dquarkus.kubernetes.deploy=true`
@@ -226,29 +226,24 @@ This will add the following declaration to the deploymentConfig:
                 name: message-cm
 ```
 
-* To add config map, secrets we need the kubernetes-config. [See this guide](https://quarkus.io/guides/kubernetes-config), then declare properties in certain formats:
+* To add config map, secrets, we need the kubernetes-config. [See this guide](https://quarkus.io/guides/kubernetes-config), then declare properties in certain formats:
 
- ```properties
-  %prod.quarkus.openshift.env-vars.KAFKA_USER.value=sandbox-rp-tls-cred
-  %prod.quarkus.openshift.env-vars.SECURE_PROTOCOL.value=SSL
-  %dev.quarkus.openshift.env-vars.SECURE_PROTOCOL.value=SASL_SSL
-  quarkus.openshift.env-vars.KAFKA_PASSWORD.secret=sandbox-rp-tls-cred
-  quarkus.openshift.env-vars.KAFKA_PASSWORD.value=user.password
-  quarkus.openshift.mounts.es-cert.path=/deployments/certs/server
-  quarkus.openshift.secret-volumes.es-cert.secret-name=sandbox-rp-cluster-ca-cert
- ```
+```properties
+quarkus.openshift.env.configmaps=vaccine-order-ms-cm
+quarkus.openshift.env.secrets=vaccine-order-secrets
+quarkus.openshift.env.mapping.KAFKA_SSL_TRUSTSTORE_PASSWORD.from-secret=light-es-cluster-ca-cert
+quarkus.openshift.env.mapping.KAFKA_SSL_TRUSTSTORE_PASSWORD.with-key=ca.password
+quarkus.openshift.mounts.es-cert.path=/deployments/certs/server
+quarkus.openshift.secret-volumes.es-cert.secret-name=light-es-cluster-ca-cert
+```
 
  That will generate the expected spec:
  ```yaml
-     - name: KAFKA_USER
-      value: sandbox-rp-tls-cred
-    - name: SECURE_PROTOCOL
-      value: SSL
-    - name: KAFKA_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          key: user.password
-          name: sandbox-rp-tls-cred
+    envFrom:
+      - configMapRef:
+        name: vaccine-order-ms-cm
+      - secretRef:
+        name: vaccine-order-secrets
     volumeMounts:
     - mountPath: /deployments/certs/server
       name: es-cert
@@ -287,7 +282,22 @@ This is done via a HTTP based long polling transport, that will synchronize your
 
 ## Testing with Quarkus
 
-Quarkus uses junit 5, and QuarkusTest to access to CDI and other quarkus goodies. See [the test guide here](https://quarkus.io/guides/getting-started-testing). To test via HTTP, we can use rest-assured. 
+Quarkus uses junit 5, and QuarkusTest to access to CDI and other quarkus goodies. See [the test guide here](https://quarkus.io/guides/getting-started-testing). To test via HTTP, and rest-assured. 
+
+Here is an example for post testing:
+
+```java
+ TrainSearchRequest req = new TrainSearchRequest(); //...
+Response resp = with().headers("Content-Type", ContentType.JSON, "Accept", ContentType.JSON)
+          .body(req)
+          .when().post("/consolidatorA")
+          .then()
+             .statusCode(200)
+             .contentType(ContentType.JSON)
+        .extract()
+        .response();
+        TrainSearchResponse searchResp= resp.body().as(TrainSearchResponse.class);
+```
 
 Application configuration will be used in any active profile. The built-in profiles in Quarkus are: `dev, prod and test`. The `test` profile will be used every time you run the @QuarkusTest
 
@@ -486,11 +496,12 @@ Quick summary:
 
 Nice [cheat sheet](https://lordofthejars.github.io/quarkus-cheat-sheet/#_reactive_messaging) to combine Munity, reative messaging.
 
-* It is possible to combine imperative and reactive: so on a POST api, emit events to kafka. We just need to inject an emitter.
+* It is possible to combine imperative and reactive: so on a POST api emits event to kafka. We just need to inject an emitter as below:
 
 ```java
   @Inject @Channel("items") Emitter<KafkaRecord<String, Item>> emitter;
 ```
+
 Emitting Kafka Records will duplicate the payload.
 
 ```json

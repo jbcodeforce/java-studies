@@ -19,6 +19,22 @@ palette and access to preview a file like a csv.
 * cmd -> shift -> O get the code outline
 * cmd ->  P navigate project file
 
+### Run a java main
+
+Create a configuration with the name of the class and arguments. See [example here.](https://code.visualstudio.com/docs/java/java-debugging). Something like:
+
+```json
+ "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch)",
+            "request": "launch",
+            "mainClass": "jbcodeforce.p1.WordCountMain",
+            "args": "wc.txt"
+        }
+ ]
+```
+
 ## VSCode tricks
 
 * Control the file exposed (like removing eclipse related file) -> code -> Preferences -> Settings -> your-existing-projectname -> Commonly used, file exclude and then enter a pattern like (`**/.classpath`)
