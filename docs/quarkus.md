@@ -169,6 +169,21 @@ We can also combine this into a docker-compose [file like in the eda item invent
     command: "mvn quarkus:dev"
 ```
 
+## OpenAPI
+
+Add the declaration of the Application api in properties. [See this open API guide](https://quarkus.io/guides/openapi-swaggerui)
+
+```properties
+%dev.mp.openapi.extensions.smallrye.info.title=Product Microservice API (development)
+mp.openapi.extensions.smallrye.info.title=Product Microservice API
+mp.openapi.extensions.smallrye.info.version=1.0.0
+mp.openapi.extensions.smallrye.info.description=Just an example of kafka consumer and service
+mp.openapi.extensions.smallrye.info.termsOfService=Demonstration purpose
+mp.openapi.extensions.smallrye.info.contact.name=IBM Technical Asset and Architecture team 
+mp.openapi.extensions.smallrye.info.contact.url=https://ibm-cloud-architecture/refarch-eda
+mp.openapi.extensions.smallrye.info.license.name=Apache 2.0
+mp.openapi.extensions.smallrye.info.license.url=http://www.apache.org/licenses/LICENSE-2.0.html
+```
 
 ## Running on OpenShift
 
