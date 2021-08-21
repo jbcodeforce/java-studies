@@ -40,6 +40,8 @@ public class TicketSubscriber
       * Uses the JMS Client classes to establish a connection to the Queue Manager
       * running on the MQ Server
       *
+      * Challenge : Subscribes to topic
+      *
       * @param session A pre-established connection to a MQ Server
       * @param destinationName The topic to be subscribed to
       *
@@ -49,14 +51,14 @@ public class TicketSubscriber
 
     public TicketSubscriber(Session session, String destinationName) {
       logger.fine("Building Message Consumer");
-       try {
+      try {
         // Create the Topic and Subscription to it.
         Destination topic = session.createTopic(destinationName);
         subscriber = session.createConsumer(topic);
         this.session = session;
-        logger.fine("Subscription to ticket topic established");
+        logger.fine("Subscription to ticket queue established");
       } catch (JMSException e) {
-        logger.severe("Unable to establish subscription to ticket topic");
+        logger.severe("Unable to establish subscription to ticket queue");
         e.printStackTrace();
       }
     }
@@ -76,6 +78,8 @@ public class TicketSubscriber
     /**
       * Polls the subscription waiting for a message to be published.
       *
+      * Challenge : Receives a publication
+      *
       * @param None
       *
       * @return Message that has been received, once a message has been
@@ -83,12 +87,8 @@ public class TicketSubscriber
       */
     public Message waitForPublish () throws PublishWaitException {
       Message message = null;
-      boolean isCommited = false;
       try {
-        logger.finest("Waiting for a message");
         message = subscriber.receive();
-        session.commit();
-        isCommited = true;
         if (message != null)
         {
           System.out.println("************************************");
@@ -96,7 +96,6 @@ public class TicketSubscriber
           System.out.println(message.getBody(String.class));
           System.out.println("");
         }
-
         concurrentErrorCounter = 0;
       }
       catch (JMSException e) {
@@ -105,16 +104,7 @@ public class TicketSubscriber
         if (3 > concurrentErrorCounter++) {
           throw new PublishWaitException(String.format("JMS Exception seen %d times", concurrentErrorCounter));
         }
-      } finally {
-          if (session != null && !isCommited) {
-            try {
-              session.rollback();
-            } catch (JMSException e){
-              logger.warning("Error in rollback");
-              e.printStackTrace();
-            }
-          }
-        }
+      }
       return message;
     }
 }

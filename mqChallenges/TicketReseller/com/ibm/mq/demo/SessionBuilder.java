@@ -36,7 +36,7 @@ public class SessionBuilder
   private static final Logger logger = Logger.getLogger("com.ibm.mq.demo");
 
   // Settings for the connection to MQ
-  // Should be obtained from either a JNDI lookup or a .json file
+  // Should be obtained from either a lookup or a .json file
   private static final String HOST = "localhost"; // Host name or IP address
   private static final int PORT = 1414; // Listener port for your queue manager
   private static String CHANNEL = "DEV.APP.SVRCONN";
@@ -45,9 +45,13 @@ public class SessionBuilder
   private static String PASSWORD = "passw0rd";
   private static String SUBSCRIPTION_NAME = "SampleSubscriber";
 
+  private static Boolean TRANSACTED = false;
+
   /**
    * Uses the JMS Client classes to establish a connection to the Queue Manager
    * running on the MQ Server
+   *
+   * Challenge : Connect to a queue manager
    *
    * @param None
    * @return Session if the connection is established, null if the Connection
@@ -76,7 +80,7 @@ public class SessionBuilder
           logger.warning(String.format("Invalid port specified defaulting to %d", PORT));
         }
 		  }
-      
+
       JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
       JmsConnectionFactory cf = ff.createConnectionFactory();
 
@@ -94,11 +98,12 @@ public class SessionBuilder
       // Create JMS objects
       logger.finest("Creating Connection Session");
       Connection connection = cf.createConnection();
-      session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+      session = connection.createSession(TRANSACTED, Session.AUTO_ACKNOWLEDGE);
       connection.start();
 
       logger.fine("JMS session connection initialised successfully");
-    } catch (JMSException jmsex) {
+    }
+    catch (JMSException jmsex) {
       logger.severe("Unable to create JMS Connection");
       jmsex.printStackTrace();
     }
@@ -127,9 +132,9 @@ public class SessionBuilder
   }
 
   /**
-   * Determines System Environment String
+   * Determines System Envrionment String
    *
-   * @param envparam The environment string to find
+   * @param envparam The envrionment string to find
    * @param defaultvalue The default value to use
    * @return environment string if found else default
    */

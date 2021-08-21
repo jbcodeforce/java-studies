@@ -32,39 +32,40 @@ public class Reseller
   /**
    * Main method
    *
-   * @param args No argument needed
+   * @param args
    */
   public static void main(String[] args)
   {
     initialiseLogging();
     logger.info("Reseller Application is starting");
 
-    // Connect to a queue manager
+    // Challenge : Connect to a queue manager
     Session session = SessionBuilder.connect();
 
     if (session != null) {
+      // Challenge : Subscribes to topic
       TicketSubscriber ticketSubscriber = new TicketSubscriber(session, DESTINATION_NAME);
       TicketRequester ticketRequester = new TicketRequester(session);
       if (ticketSubscriber.isGood()) {
         logger.fine("Entering wait loop for event tickets");
         while(true) {
-          // Receives a publication
+          // Challenge : Receives a publication
           try {
             Message message = ticketSubscriber.waitForPublish();
             if (message != null) {
               logger.fine("Tickets have been made available");
 
-              // Ask user for how many ticket he wants
+              // Challenge : Processes a publication
               int numToReserve = howMany(message);
 
               logger.fine("Sending request to purchase tickets over peer to peer");
 
-              // Receiving a publication triggers a put
+              // Challenge : Receiving a publication triggers a put
               // then requests to purchase a batch of tickets
               String correlationID = ticketRequester.put(message, numToReserve);
               if (correlationID != null) {
                 logger.fine("Request has been sent, waiting response from Event Booking System");
-                //  reseller application does a get from this queue
+                // Challenge : Our reseller application does a get from this queue
                 if (ticketRequester.get(correlationID)) {
                   logger.info("Tickets secured!");
                 } else {

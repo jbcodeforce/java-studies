@@ -45,7 +45,6 @@ public class TicketRequester
     private static String CONFIRMATION_QUEUE = "confirmation";
     private static String ACCEPTED = "Accepted";
 
-
     /**
      * Constructs a TicketRequester with the Session representing
      * the connection to MQ.
@@ -71,11 +70,9 @@ public class TicketRequester
     public static String put(Message message, int numTickets)
     {
       String correlationID = null;
-      boolean isCommited = false;
 
       try {
         logger.finest("Building message to request tickets");
-
         Event event = EventFactory.newEventFromMessage(message);
         RequestTickets request = new RequestTickets(event, numTickets);
 
@@ -83,14 +80,12 @@ public class TicketRequester
         correlationID = UUID.randomUUID().toString();
         requestMessage.setJMSCorrelationID(correlationID);
         requestMessage.setJMSExpiration(900000);
+
         logger.finest("Sending request to purchase tickets");
         Queue requestQueue = session.createQueue(PURCHASE_QUEUE);
         MessageProducer producer = session.createProducer(requestQueue);
 
         producer.send(requestMessage);
-        session.commit();
-        isCommited = true;
-
         logger.finest("Sent request for tickets");
        }
        catch (JAXBException e) {
@@ -102,16 +97,8 @@ public class TicketRequester
        {
          correlationID = null;
          e.printStackTrace();
-       } finally {
-         if (session != null && !isCommited) {
-           try {
-             session.rollback();
-           } catch (JMSException e) {
-             logger.warning("Error in rollback call");
-             e.printStackTrace();
-           }
-         }
        }
+
       return correlationID;
     }
 
@@ -119,37 +106,29 @@ public class TicketRequester
     /**
      * gets a message from the confirmation queue,
      *
+     * Challenge : our reseller application does a get from this queue
+     *
      * @param String the correlation id that was sent with the put
      * @return boolean indicating if the ticket request was successful.
      */
     public boolean get(String correlationID) {
       boolean success = false;
       Message responseMsg = null;
-      boolean isCommited = false;
+
       try {
-        logger.finest("Performing receive on confirmation queue");
         Destination destination = session.createQueue(CONFIRMATION_QUEUE);
         MessageConsumer messageConsumer = session.createConsumer(destination, "JMSCorrelationID='"+correlationID+"'");
         logger.info("Waiting for 30 seconds for a response");
         responseMsg = messageConsumer.receive(30000);
-        session.commit();
-        isCommited = true;
+
         if (responseMsg != null) {
           success = isAccepted(responseMsg);
         }
-      } catch (JMSException e) {
-       logger.warning("Error connecting to confirmation queue");
-       e.printStackTrace();
-      } finally {
-       if (session != null && !isCommited) {
-         try {
-           session.rollback();
-         } catch (JMSException e) {
-           logger.warning("Error in rollback call");
-           e.printStackTrace();
-         }
-       }
       }
+      catch (JMSException e) {
+        logger.warning("Error connecting to confirmation queue");
+        e.printStackTrace();
+      } 
       return success;
     }
 
