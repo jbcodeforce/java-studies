@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "../../../Studies/event-endpoint-management-demo"
+		},
+		{
+			"path": "../../python-code"
+		},
+		{
+			"path": "maxPathSum"
+		},
+		{
+			"path": "snapshot-array"
+		}
+	],
+	"settings": {
+		"java.project.sourcePaths": [
+			"src/test/java",
+			"src/main/java"
+		]
+	}
+}
