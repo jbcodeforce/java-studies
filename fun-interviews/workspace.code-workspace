@@ -11,12 +11,18 @@
 		},
 		{
 			"path": "snapshot-array"
+		},
+		{
+			"path": "../data-structure-play/tree-play"
+		},
+		{
+			"name": "streams-play",
+			"path": "../data-structure-play/streams-play"
 		}
 	],
 	"settings": {
 		"java.project.sourcePaths": [
-			"src/test/java",
-			"src/main/java"
+			"src/test/java"
 		]
 	}
 }

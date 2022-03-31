@@ -4,9 +4,12 @@ public class Node {
     int value;
     Node right;
     Node left;
-    int result;
 
-    public Node(){}
+    public Node(int v){
+        right = null;
+        value = v;
+        left = null;
+    }
 
     public Node(int v, Node l, Node r) {
         this.value = v;
