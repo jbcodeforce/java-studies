@@ -22,7 +22,9 @@ import java.util.List;
 public class SearchBestBlock {
 
     /**
-     * Example of city with list of blocks
+     * Example of city with list of blocks.
+     * From the data the best block is at index 3 as the cost to get a gym is 1, to a school is 0 and
+     * to a store is 1.
      * @return
      */
     public static List<HashMap<String,Boolean>> buildBlocks() {

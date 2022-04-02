@@ -21,11 +21,14 @@
 		},
 		{
 			"path": "../../flink-studies"
+		},
+		{
+			"path": "../data-structure-play/otherpuzzles"
 		}
 	],
 	"settings": {
 		"java.project.sourcePaths": [
-			"src/test/java"
+			"src/main/java"
 		],
 		"java.configuration.updateBuildConfiguration": "automatic"
 	}
