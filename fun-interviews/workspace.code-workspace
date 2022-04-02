@@ -26,6 +26,7 @@
 	"settings": {
 		"java.project.sourcePaths": [
 			"src/test/java"
-		]
+		],
+		"java.configuration.updateBuildConfiguration": "automatic"
 	}
 }

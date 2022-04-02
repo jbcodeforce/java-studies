@@ -16,4 +16,8 @@ public class Node {
         this.left = l;
         this.right = r;
     }
+
+    public String toString(){
+        return Integer.toString(value);
+    }
 }
