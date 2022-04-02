@@ -18,6 +18,9 @@
 		{
 			"name": "streams-play",
 			"path": "../data-structure-play/streams-play"
+		},
+		{
+			"path": "../../flink-studies"
 		}
 	],
 	"settings": {
