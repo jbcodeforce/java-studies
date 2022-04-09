@@ -8,7 +8,7 @@ public class TestRemoveIsland {
     @Test
     public void testSimplestIsland(){
         int[][] a = {{0,0,0},{0,1,0},{0,0,0}};
-        Removelslands parser = new Removelslands(a);
+        IslandSearch parser = new IslandSearch(a);
         Assertions.assertEquals(1, a[1][1]);
         a= parser.removeIslands();
         Assertions.assertEquals(0, a[1][1]);
@@ -17,7 +17,7 @@ public class TestRemoveIsland {
     @Test
     public void testACape(){
         int[][] a = {{1,0,0,0},{1,0,1,1},{0,0,0,0},{0,0,0,0}};
-        Removelslands parser = new Removelslands(a);
+        IslandSearch parser = new IslandSearch(a);
         Assertions.assertEquals(1, a[1][2]);
         a= parser.removeIslands();
         Assertions.assertEquals(1, a[1][2]);
@@ -32,7 +32,7 @@ public class TestRemoveIsland {
                      {1,1,0,0,0,0},
                      {1,0,1,1,1,0},
                      {0,0,0,0,0,0}};
-        Removelslands parser = new Removelslands(a);
+        IslandSearch parser = new IslandSearch(a);
         Assertions.assertEquals(1, a[1][2]);
         a= parser.removeIslands();
         Assertions.assertEquals(1, a[1][2]);
