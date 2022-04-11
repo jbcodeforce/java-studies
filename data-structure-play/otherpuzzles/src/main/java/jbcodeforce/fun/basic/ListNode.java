@@ -1,17 +1,26 @@
 package jbcodeforce.fun.basic;
 
 public class ListNode {
-    int val;
-    ListNode next;
+    public int val;
+    public ListNode next;
 
-    ListNode() {
+    public ListNode() {
     }
 
-    ListNode(int val) {
+    public ListNode(int[] a) {
+        ListNode l = null;
+        for(int i = a.length-1;i>0;i-- ){
+            l = new ListNode(a[i],l);
+        }
+        val=a[0];
+        next = l;
+    }
+
+    public ListNode(int val) {
         this.val = val;
     }
 
-    ListNode(int val, ListNode next) {
+    public ListNode(int val, ListNode next) {
         this.val = val;
         this.next = next;
     }

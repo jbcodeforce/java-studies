@@ -29,14 +29,18 @@ public class TestRemoveIsland {
         int[][] a = {{1,0,0,0,0,0},
                      {1,0,1,1,0,0},
                      {0,1,0,0,0,0},
-                     {1,1,0,0,0,0},
+                     {1,0,0,0,0,0},
                      {1,0,1,1,1,0},
                      {0,0,0,0,0,0}};
         IslandSearch parser = new IslandSearch(a);
         Assertions.assertEquals(1, a[1][2]);
+        Assertions.assertEquals(1, a[4][2]);
         a= parser.removeIslands();
         Assertions.assertEquals(1, a[1][2]);
         Assertions.assertEquals(1, a[1][3]);
+        Assertions.assertEquals(0, a[4][2]);
+        Assertions.assertEquals(0, a[4][3]);
+        Assertions.assertEquals(0, a[4][4]);
         
     }
 }
