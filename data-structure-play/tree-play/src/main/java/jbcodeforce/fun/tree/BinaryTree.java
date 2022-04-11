@@ -3,6 +3,7 @@ package jbcodeforce.fun.tree;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /** Sorted binary tree */
 public class BinaryTree {
@@ -46,8 +47,58 @@ public class BinaryTree {
 
     }
 
+    public void add(int value) {
+        root = addRecursive(root, value);
+    }
+
+    private IntNode addRecursive(IntNode current, int value) {
+
+        if (current == null) {
+            return new IntNode(value);
+        }
+
+        if (value < current.value) {
+            current.left = addRecursive(current.left, value);
+        } else if (value > current.value) {
+            current.right = addRecursive(current.right, value);
+        }
+
+        return current;
+    }
+
+
     public IntNode getRoot() {
         return this.root;
+    }
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    public int getSize() {
+        return getSizeRecursive(root);
+    }
+
+    private int getSizeRecursive(IntNode current) {
+        return current == null ? 0 : getSizeRecursive(current.left) + 1 + getSizeRecursive(current.right);
+    }
+
+    public boolean containsNode(int value) {
+        return containsNodeRecursive(root, value);
+    }
+
+    private boolean containsNodeRecursive(IntNode current, int value) {
+        if (current == null) {
+            return false;
+        }
+
+        if (value == current.value) {
+            return true;
+        }
+
+        return value < current.value
+          ? containsNodeRecursive(current.left, value)
+          : containsNodeRecursive(current.right, value);
     }
 
     public IntNode minimum() {
@@ -64,6 +115,10 @@ public class BinaryTree {
             current = current.right;
         }
         return current;
+    }
+
+    private int findSmallestValue(IntNode root) {
+        return root.left == null ? root.value : findSmallestValue(root.left);
     }
 
     public void buildFromArray(int[] inA) {
@@ -189,7 +244,7 @@ public class BinaryTree {
      * Questions:
      * - is the tree sorted? No
      * - Is there any negative valued?
-     * If all positive the max sum is the sum of all elements in the tree. So using
+     * If all positive values the max sum is the sum of all elements in the tree. So using
      * a post order traversal will compute the max sum
      * The value of subtree rooted at current node is equal to sum of current node
      * value, left node subtree sum
@@ -213,4 +268,61 @@ public class BinaryTree {
         return 0;
     }
 
+    /**
+     * Keep order of the value in the tree. Relevant when the tree is sorted
+     * @param node
+     */
+    public void traverseInOrder(IntNode node) {
+        if (node != null) {
+            traverseInOrder(node.left);
+            visit(node.value);
+            traverseInOrder(node.right);
+        }
+    }
+
+    public void traversePreOrder(IntNode node) {
+        if (node != null) {
+            visit(node.value);
+            traversePreOrder(node.left);
+            traversePreOrder(node.right);
+        }
+    }
+
+    public void traversePostOrder(IntNode node) {
+        if (node != null) {
+            traversePostOrder(node.left);
+            traversePostOrder(node.right);
+            visit(node.value);
+        }
+    }
+
+    private void visit(int value) {
+        System.out.print(" " + value);        
+    }
+
+    public void traversePostOrderWithoutRecursion() {
+        Stack<IntNode> stack = new Stack<>();
+        IntNode prev = root;
+        IntNode current = root;
+        stack.push(root);
+
+        while (current != null && !stack.isEmpty()) {
+            current = stack.peek();
+            boolean hasChild = (current.left != null || current.right != null);
+            boolean isPrevLastChild = (prev == current.right || (prev == current.left && current.right == null));
+
+            if (!hasChild || isPrevLastChild) {
+                current = stack.pop();
+                visit(current.value);
+                prev = current;
+            } else {
+                if (current.right != null) {
+                    stack.push(current.right);
+                }
+                if (current.left != null) {
+                    stack.push(current.left);
+                }
+            }
+        }   
+    }  
 }

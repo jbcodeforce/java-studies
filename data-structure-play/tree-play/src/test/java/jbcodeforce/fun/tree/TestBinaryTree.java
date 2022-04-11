@@ -78,4 +78,12 @@ public class TestBinaryTree {
         Assertions.assertNull(tree.getRoot().right.left);
     }
 
+    @Test
+    public void printPreOrderTraversal(){
+        int[] A = {7,5,3,10,8,11};
+        BinaryTree tree = new BinaryTree();
+        tree.buildFromArray(A);
+        tree.traversePostOrder(tree.root);
+    }
+
 }
