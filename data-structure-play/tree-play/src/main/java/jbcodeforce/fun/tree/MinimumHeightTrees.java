@@ -2,7 +2,9 @@ package jbcodeforce.fun.tree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 
@@ -28,16 +30,43 @@ public class MinimumHeightTrees {
      * @return
      */
     public static List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        
+        if (n < 2) {
+            ArrayList<Integer> solution = new ArrayList<>();
+            for (int i = 0; i < n; i++)
+                solution.add(i);
+            return solution;
+        }
+
         List<Integer> solution = new ArrayList<>();
         MinimumHeightTrees mhtBuilder = new MinimumHeightTrees();
         int minHeight = 100;
         HashMap<Integer,Node> nodes = mhtBuilder.buildTree(n,edges);
+        ArrayList<Node> visited = new ArrayList<>();
         for(Node root: nodes.values()) {
-
+          
+            int d = computeDistanceToLeaf(root,visited);
+            if (d < minHeight) {
+                minHeight = d;
+                root.height = d;
+            }
         }
         return solution;
     }
     
+    private static int computeDistanceToLeaf(Node root, List<Node> visited) {
+        visited.add(root);
+        int max = 0;
+        for (Node child : root.vertices) {
+            if (! visited.contains(child)) {
+                int currentdistance = computeDistanceToLeaf(child,visited) + 1;
+                max = Math.max(max, currentdistance);
+                child.height = max;
+            }
+        }
+        return max;
+    }
+
     public HashMap<Integer,Node> buildTree(int n,int[][] edges) {
         HashMap<Integer,Node> nodes = new HashMap<Integer,Node>();
         for (int i = 0; i<n;i++) {
@@ -45,9 +74,8 @@ public class MinimumHeightTrees {
             nodes.put(node.value, node);
         }
        
-        for (int i=0; i< edges.length;i++) {
-            Integer keyA = Integer.valueOf(edges[i][0]);
-            Integer keyB = Integer.valueOf(edges[i][1]);
+        for (int[] edge : edges ) {
+            Integer keyA = edge[0], keyB = edge[1];
             Node a = nodes.get(keyA);
             Node b = nodes.get(keyB);
             a.addEdgeTo(b); // add b to a too
@@ -66,20 +94,16 @@ public class MinimumHeightTrees {
     public class Node {
         public int value;
         public int height;
-        public HashMap<Integer,Node> vertices;
+        public Set<Node> vertices;
 
         public Node(int v){
             this.value = v;
-            vertices = new HashMap<Integer,Node>();
+            vertices = new HashSet<Node>();
         }
 
         public void addEdgeTo(Node b) {
-            if (! this.vertices.containsKey(b.value)) {
-                this.vertices.put(b.value,b);
-            }
-            if (! b.vertices.containsKey(this.value)) {
-                b.vertices.put(this.value, this);
-            }
+            this.vertices.add(b);
+            b.vertices.add(this);
         }
 
         /**

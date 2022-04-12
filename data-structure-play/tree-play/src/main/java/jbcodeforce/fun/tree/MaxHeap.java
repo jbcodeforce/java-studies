@@ -97,6 +97,7 @@ public class MaxHeap {
 
      public void print() {
         traverseInOrder(root);
+        System.out.println();
      }
 
      public void traverseInOrder(IntNode current) {
@@ -108,6 +109,7 @@ public class MaxHeap {
      }
 
      public void visit(IntNode n) {
-        System.out.println(" " + n.value);
+        System.out.print(" " + n.value);
+        
      }
 }

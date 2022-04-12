@@ -101,6 +101,10 @@ public class BinaryTree {
           : containsNodeRecursive(current.right, value);
     }
 
+    /**
+     * When tree is sorted
+     * @return
+     */
     public IntNode minimum() {
         IntNode current = getRoot();
         while (current.left != null) {
@@ -325,4 +329,29 @@ public class BinaryTree {
             }
         }   
     }  
+
+    /**
+     * Inverse a tree
+     * @param node
+     * @return
+     */
+    public IntNode invert(IntNode node) 
+	{ 
+		if (node == null) 
+			return node; 
+
+		/* recursive calls */
+		IntNode left = invert(node.left); 
+		IntNode right = invert(node.right); 
+
+		/* swap the left and right pointers */
+		node.left = right; 
+		node.right = left; 
+
+		return node; 
+	} 
+
+    public IntNode invert() {
+        return invert(getRoot());
+    }
 }
