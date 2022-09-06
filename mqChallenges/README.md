@@ -4,7 +4,7 @@ A set of code samples to study MQ and get some code templates.
 
 ## The Event Booking demo
 
-See the last documentation in [this note](https://jbcodeforce.github.io/architecture/mq/).
+See the last documentation in [this note](https://jbcodeforce.github.io/techno/integration/mq/).
 
 This is the implementation of [the MQ developer tutorial](https://developer.ibm.com/messaging/learn-mq/mq-tutorials/mq-dev-challenge/) and supports the implementation of the following solution:
 
@@ -14,7 +14,7 @@ and confirmation queues.
 We need the JMS api jar and the MQ all client code. Here are the two curl to use
 
 ```sh
-curl -o com.ibm.mq.allclient-9.2.0.0.jar https://repo1.maven.org/maven2/com/ibm/mq/com.ibm.mq.allclient/9.2.0.0/com.ibm.mq.allclient-9.2.0.0.jar
+curl -o com.ibm.mq.allclient-9.3.0.0.jar https://repo1.maven.org/maven2/com/ibm/mq/com.ibm.mq.allclient/9.3.0.0/com.ibm.mq.allclient-9.3.0.0.jar
 curl -o javax.jms-api-2.0.1.jar https://repo1.maven.org/maven2/javax/jms/javax.jms-api/2.0.1/javax.jms-api-2.0.1.jar
 ```
 
